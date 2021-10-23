@@ -35,15 +35,15 @@ import (
 func NewFIFOSetInDir(root, id string, terminal bool) (*FIFOSet, error) {
 	if root != "" {
 		if err := os.MkdirAll(root, 0700); err != nil {
-			return nil, err
+			return nil, errors.WithStack(err)
 		}
 	}
 	dir, err := os.MkdirTemp(root, "")
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	closer := func() error {
-		return os.RemoveAll(dir)
+		return errors.WithStack(os.RemoveAll(dir))
 	}
 	return NewFIFOSet(Config{
 		Stdin:    filepath.Join(dir, id+"-stdin"),
