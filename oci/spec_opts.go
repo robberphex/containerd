@@ -390,7 +390,7 @@ func WithImageConfigArgs(image Image, args []string) SpecOpts {
 			}
 			// we should query the image's /etc/group for additional GIDs
 			// even if there is no specified user in the image config
-			return WithAdditionalGIDs("root")(ctx, client, c, s)
+			return nil
 		} else if s.Windows != nil {
 			s.Process.Env = replaceOrAppendEnvValues(config.Env, s.Process.Env)
 			cmd := config.Cmd
