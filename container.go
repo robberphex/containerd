@@ -28,6 +28,7 @@ import (
 	tasktypes "github.com/containerd/containerd/api/types/task"
 	"github.com/containerd/containerd/cio"
 	"github.com/containerd/containerd/containers"
+	"github.com/containerd/containerd/defaults"
 	"github.com/containerd/containerd/errdefs"
 	"github.com/containerd/containerd/images"
 	"github.com/containerd/containerd/oci"
@@ -208,23 +209,27 @@ func (c *container) Image(ctx context.Context) (Image, error) {
 }
 
 func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...NewTaskOpts) (_ Task, err error) {
-	i, err := ioCreate(c.id)
+	// i, err := ioCreate(c.id)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer func() {
+	// 	if err != nil && i != nil {
+	// 		i.Cancel()
+	// 		i.Close()
+	// 	}
+	// }()
+	// cfg := i.Config()
+	fifos, err := cio.NewFIFOSetInDir(defaults.DefaultFIFODir, c.id, true)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		if err != nil && i != nil {
-			i.Cancel()
-			i.Close()
-		}
-	}()
-	cfg := i.Config()
 	request := &tasks.CreateTaskRequest{
 		ContainerID: c.id,
-		Terminal:    cfg.Terminal,
-		Stdin:       cfg.Stdin,
-		Stdout:      cfg.Stdout,
-		Stderr:      cfg.Stderr,
+		Terminal:    true,
+		Stdin:       fifos.Stdin,
+		Stdout:      fifos.Stdout,
+		Stderr:      fifos.Stderr,
 	}
 	r, err := c.get(ctx)
 	if err != nil {
@@ -288,9 +293,9 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 	}
 	t := &task{
 		client: c.client,
-		io:     i,
-		id:     c.id,
-		c:      c,
+		//io:     i,
+		id: c.id,
+		c:  c,
 	}
 	if info.Checkpoint != nil {
 		request.Checkpoint = info.Checkpoint
