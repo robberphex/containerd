@@ -22,14 +22,29 @@ package cio
 import (
 	"context"
 	"io"
-	"os"
+	"math/rand"
 	"path/filepath"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/containerd/fifo"
 	"github.com/pkg/errors"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("0123456789")
+
+func randStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
 
 // NewFIFOSetInDir returns a new FIFOSet with paths in a temporary directory under root
 func NewFIFOSetInDir(root, id string, terminal bool) (*FIFOSet, error) {
@@ -38,12 +53,9 @@ func NewFIFOSetInDir(root, id string, terminal bool) (*FIFOSet, error) {
 	// 		return nil, errors.WithStack(err)
 	// 	}
 	// }
-	dir, err := os.MkdirTemp(root, "")
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
+	dir := filepath.Join(root, randStringRunes(8))
 	closer := func() error {
-		return errors.WithStack(os.RemoveAll(dir))
+		return errors.New("unimplemented")
 	}
 	return NewFIFOSet(Config{
 		Stdin:    filepath.Join(dir, id+"-stdin"),
