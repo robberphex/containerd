@@ -33,11 +33,11 @@ import (
 
 // NewFIFOSetInDir returns a new FIFOSet with paths in a temporary directory under root
 func NewFIFOSetInDir(root, id string, terminal bool) (*FIFOSet, error) {
-	if root != "" {
-		if err := os.MkdirAll(root, 0700); err != nil {
-			return nil, errors.WithStack(err)
-		}
-	}
+	// if root != "" {
+	// 	if err := os.MkdirAll(root, 0700); err != nil {
+	// 		return nil, errors.WithStack(err)
+	// 	}
+	// }
 	dir, err := os.MkdirTemp(root, "")
 	if err != nil {
 		return nil, errors.WithStack(err)
