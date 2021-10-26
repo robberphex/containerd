@@ -56,9 +56,6 @@ func NewFIFOSetInDir(root, id string, terminal bool) (*FIFOSet, error) {
 	// 	}
 	// }
 	dir := filepath.Join(root, randStringRunes(8))
-	if err := os.MkdirAll(dir, 0700); err != nil {
-		return nil, errors.WithStack(err)
-	}
 	closer := func() error {
 		return errors.New("unimplemented")
 	}
