@@ -4307,6 +4307,85 @@ file {
       json_name: "exitedAt"
     }
   }
+  message_type {
+    name: "WaitRequestEx"
+    field {
+      name: "container_id"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "containerId"
+    }
+    field {
+      name: "exec_id"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "execId"
+    }
+    field {
+      name: "stdin"
+      number: 3
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "stdin"
+    }
+  }
+  message_type {
+    name: "WaitResponseEx"
+    field {
+      name: "exit_status"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_UINT32
+      json_name: "exitStatus"
+    }
+    field {
+      name: "stdout"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "stdout"
+    }
+    field {
+      name: "stderr"
+      number: 3
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "stderr"
+    }
+    field {
+      name: "state"
+      number: 4
+      label: LABEL_OPTIONAL
+      type: TYPE_ENUM
+      type_name: ".containerd.services.tasks.v1.WaitResponseEx.TaskState"
+      json_name: "state"
+    }
+    enum_type {
+      name: "TaskState"
+      value {
+        name: "UNIVERSAL"
+        number: 0
+      }
+      value {
+        name: "EXITED"
+        number: 1
+      }
+      value {
+        name: "KILLED"
+        number: 2
+      }
+      value {
+        name: "PAUSED"
+        number: 3
+      }
+      value {
+        name: "RESUMED"
+        number: 4
+      }
+    }
+  }
   service {
     name: "Tasks"
     method {
@@ -4393,6 +4472,13 @@ file {
       name: "Wait"
       input_type: ".containerd.services.tasks.v1.WaitRequest"
       output_type: ".containerd.services.tasks.v1.WaitResponse"
+    }
+    method {
+      name: "WaitEx"
+      input_type: ".containerd.services.tasks.v1.WaitRequestEx"
+      output_type: ".containerd.services.tasks.v1.WaitResponseEx"
+      client_streaming: true
+      server_streaming: true
     }
   }
   options {
