@@ -28,6 +28,7 @@ import (
 	"sync"
 
 	"github.com/containerd/containerd/defaults"
+	"github.com/containerd/containerd/runtime"
 )
 
 var bufPool = sync.Pool{
@@ -158,13 +159,9 @@ func NewCreator(opts ...Opt) Creator {
 }
 
 // NewCreator returns an IO creator from the options
-func NewFifos(id string) error {
-	fifos, err := NewFIFOSetInDir(defaults.DefaultFIFODir, id, true)
-	if err != nil {
-		return err
-	}
+func NewFifos(io runtime.IO) error {
 	ctx := context.Background()
-	_, err = openFifos(ctx, fifos)
+	_, err := openFifosForIO(ctx, io)
 	if err != nil {
 		return err
 	}

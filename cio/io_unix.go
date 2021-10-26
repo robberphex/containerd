@@ -29,6 +29,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/containerd/containerd/runtime"
 	"github.com/containerd/fifo"
 	"github.com/pkg/errors"
 )
@@ -117,6 +118,47 @@ func copyIO(fifos *FIFOSet, ioset *Streams) (*cio, error) {
 		closers: append(pipes.closers(), fifos),
 		cancel:  cancel,
 	}, nil
+}
+
+func openFifosForIO(ctx context.Context, io runtime.IO) (f pipes, retErr error) {
+	if io.Stdin != "" {
+		dir := filepath.Dir(io.Stdin)
+		if err := os.MkdirAll(dir, 0700); err != nil {
+			return f, errors.WithStack(err)
+		}
+		if f.Stdin, retErr = fifo.OpenFifo(ctx, io.Stdin, syscall.O_WRONLY|syscall.O_CREAT|syscall.O_NONBLOCK, 0700); retErr != nil {
+			return f, errors.Wrapf(retErr, "failed to open stdin fifo")
+		}
+		defer func() {
+			if retErr != nil && f.Stdin != nil {
+				f.Stdin.Close()
+			}
+		}()
+	}
+	if io.Stdout != "" {
+		dir := filepath.Dir(io.Stdout)
+		if err := os.MkdirAll(dir, 0700); err != nil {
+			return f, errors.WithStack(err)
+		}
+		if f.Stdout, retErr = fifo.OpenFifo(ctx, io.Stdout, syscall.O_RDONLY|syscall.O_CREAT|syscall.O_NONBLOCK, 0700); retErr != nil {
+			return f, errors.Wrapf(retErr, "failed to open stdout fifo")
+		}
+		defer func() {
+			if retErr != nil && f.Stdout != nil {
+				f.Stdout.Close()
+			}
+		}()
+	}
+	if !io.Terminal && io.Stderr != "" {
+		dir := filepath.Dir(io.Stderr)
+		if err := os.MkdirAll(dir, 0700); err != nil {
+			return f, errors.WithStack(err)
+		}
+		if f.Stderr, retErr = fifo.OpenFifo(ctx, io.Stderr, syscall.O_RDONLY|syscall.O_CREAT|syscall.O_NONBLOCK, 0700); retErr != nil {
+			return f, errors.Wrapf(retErr, "failed to open stderr fifo")
+		}
+	}
+	return f, nil
 }
 
 func openFifos(ctx context.Context, fifos *FIFOSet) (f pipes, retErr error) {
