@@ -18,6 +18,7 @@ package v2
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -149,6 +150,8 @@ func (m *TaskManager) ID() string {
 // Create a new task
 func (m *TaskManager) Create(ctx context.Context, id string, opts runtime.CreateOpts) (_ runtime.Task, retErr error) {
 	io, err := cio.NewCreator()(id)
+	bs, _ := json.Marshal(opts)
+	fmt.Printf("NewCreator:args:id:%v, opts:%+v\n", id, string(bs))
 	fmt.Printf("NewCreator:io:%v, err%+v\n", io, err)
 	if err != nil {
 		return nil, err
