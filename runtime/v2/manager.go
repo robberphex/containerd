@@ -22,6 +22,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/containerd/containerd/cio"
 	"github.com/containerd/containerd/containers"
 	"github.com/containerd/containerd/errdefs"
 	"github.com/containerd/containerd/events/exchange"
@@ -147,6 +148,11 @@ func (m *TaskManager) ID() string {
 
 // Create a new task
 func (m *TaskManager) Create(ctx context.Context, id string, opts runtime.CreateOpts) (_ runtime.Task, retErr error) {
+	io, err := cio.NewCreator()(id)
+	fmt.Printf("NewCreator:io:%v, err%+v\n", io, err)
+	if err != nil {
+		return nil, err
+	}
 	bundle, err := NewBundle(ctx, m.root, m.state, id, opts.Spec.Value)
 	if err != nil {
 		return nil, err
