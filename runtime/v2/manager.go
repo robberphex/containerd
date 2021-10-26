@@ -149,6 +149,9 @@ func (m *TaskManager) ID() string {
 
 // Create a new task
 func (m *TaskManager) Create(ctx context.Context, id string, opts runtime.CreateOpts) (_ runtime.Task, retErr error) {
+	// ioOpt := func(opt *cio.Streams) {
+	// 	opt.FIFODir = dir
+	// }
 	io, err := cio.NewCreator()(id)
 	bs, _ := json.Marshal(opts)
 	fmt.Printf("NewCreator:args:id:%v, opts:%+v\n", id, string(bs))
