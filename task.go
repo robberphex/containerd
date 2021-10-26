@@ -290,6 +290,11 @@ func (t *task) Wait(ctx context.Context) (<-chan ExitStatus, error) {
 	return c, nil
 }
 
+func (t *task) WaitEx(ctx context.Context) (tasks.Tasks_WaitExClient, error) {
+	client, err := t.client.TaskService().WaitEx(ctx)
+	return client, err
+}
+
 // Delete deletes the task and its runtime state
 // it returns the exit status of the task and any errors that were encountered
 // during cleanup

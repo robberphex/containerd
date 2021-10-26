@@ -42,6 +42,8 @@ type Process interface {
 	Kill(context.Context, syscall.Signal, ...KillOpts) error
 	// Wait asynchronously waits for the process to exit, and sends the exit code to the returned channel
 	Wait(context.Context) (<-chan ExitStatus, error)
+
+	WaitEx(ctx context.Context) (tasks.Tasks_WaitExClient, error)
 	// CloseIO allows various pipes to be closed on the process
 	CloseIO(context.Context, ...IOCloserOpts) error
 	// Resize changes the width and height of the process's terminal
@@ -168,6 +170,11 @@ func (p *process) Wait(ctx context.Context) (<-chan ExitStatus, error) {
 		}
 	}()
 	return c, nil
+}
+
+func (p *process) WaitEx(ctx context.Context) (tasks.Tasks_WaitExClient, error) {
+	client, err := p.task.client.TaskService().WaitEx(ctx)
+	return client, err
 }
 
 func (p *process) CloseIO(ctx context.Context, opts ...IOCloserOpts) error {

@@ -18,7 +18,9 @@ package tasks
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/containerd/containerd/api/services/tasks/v1"
 	api "github.com/containerd/containerd/api/services/tasks/v1"
 	"github.com/containerd/containerd/plugin"
 	"github.com/containerd/containerd/services"
@@ -131,4 +133,22 @@ func (s *service) Metrics(ctx context.Context, r *api.MetricsRequest) (*api.Metr
 
 func (s *service) Wait(ctx context.Context, r *api.WaitRequest) (*api.WaitResponse, error) {
 	return s.local.Wait(ctx, r)
+}
+
+func (s *service) WaitEx(server tasks.Tasks_WaitExServer) error {
+	client, err := s.local.WaitEx(server.Context())
+	if err != nil {
+		return err
+	}
+	go func() {
+		req, err := server.Recv()
+		fmt.Printf("req: %v, err: %v\n", req, err)
+		client.Send(req)
+	}()
+	go func() {
+		resp, err := client.Recv()
+		fmt.Printf("resp: %v, err: %v\n", resp, err)
+		server.Send(resp)
+	}()
+	return nil
 }
