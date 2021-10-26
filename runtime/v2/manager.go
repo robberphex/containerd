@@ -152,10 +152,10 @@ func (m *TaskManager) Create(ctx context.Context, id string, opts runtime.Create
 	// ioOpt := func(opt *cio.Streams) {
 	// 	opt.FIFODir = dir
 	// }
-	io, err := cio.NewCreator()(id)
+	err := cio.NewFifos(id)
 	bs, _ := json.Marshal(opts)
-	fmt.Printf("NewCreator:args:id:%v, opts:%+v\n", id, string(bs))
-	fmt.Printf("NewCreator:io:%v, err%+v\n", io, err)
+	fmt.Printf("NewFifos:args:id:%v, opts:%+v\n", id, string(bs))
+	fmt.Printf("NewFifos: err%+v\n", err)
 	if err != nil {
 		return nil, err
 	}

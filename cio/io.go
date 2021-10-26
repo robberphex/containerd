@@ -157,6 +157,20 @@ func NewCreator(opts ...Opt) Creator {
 	}
 }
 
+// NewCreator returns an IO creator from the options
+func NewFifos(id string) error {
+	fifos, err := NewFIFOSetInDir(defaults.DefaultFIFODir, id, true)
+	if err != nil {
+		return err
+	}
+	ctx := context.Background()
+	_, err = openFifos(ctx, fifos)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // NewAttach attaches the existing io for a task to the provided io.Reader/Writers
 func NewAttach(opts ...Opt) Attach {
 	streams := &Streams{}
