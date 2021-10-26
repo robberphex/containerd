@@ -175,6 +175,7 @@ func (m *TaskManager) Create(ctx context.Context, id string, opts runtime.Create
 
 	t, err := shim.Create(ctx, opts)
 	if err != nil {
+		fmt.Printf("shim.Create: %+v\n", err)
 		return nil, errors.Wrap(err, "failed to create shim")
 	}
 
