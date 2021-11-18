@@ -31,7 +31,6 @@ import (
 	"github.com/gogo/googleapis/google/rpc"
 	ptypes "github.com/gogo/protobuf/types"
 	"github.com/google/uuid"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 )
 
@@ -60,7 +59,7 @@ type Local struct {
 	root    string
 }
 
-var _ = (api.IntrospectionClient)(&Local{})
+var _ api.IntrospectionServer = &Local{}
 
 // UpdateLocal updates the local introspection service
 func (l *Local) UpdateLocal(root string, plugins []api.Plugin) {
@@ -71,7 +70,7 @@ func (l *Local) UpdateLocal(root string, plugins []api.Plugin) {
 }
 
 // Plugins returns the locally defined plugins
-func (l *Local) Plugins(ctx context.Context, req *api.PluginsRequest, _ ...grpc.CallOption) (*api.PluginsResponse, error) {
+func (l *Local) Plugins(ctx context.Context, req *api.PluginsRequest) (*api.PluginsResponse, error) {
 	filter, err := filters.ParseAll(req.Filters...)
 	if err != nil {
 		return nil, errdefs.ToGRPCf(errdefs.ErrInvalidArgument, err.Error())
@@ -99,7 +98,7 @@ func (l *Local) getPlugins() []api.Plugin {
 }
 
 // Server returns the local server information
-func (l *Local) Server(ctx context.Context, _ *ptypes.Empty, _ ...grpc.CallOption) (*api.ServerResponse, error) {
+func (l *Local) Server(ctx context.Context, _ *ptypes.Empty) (*api.ServerResponse, error) {
 	u, err := l.getUUID()
 	if err != nil {
 		return nil, errdefs.ToGRPC(err)

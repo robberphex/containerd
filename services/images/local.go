@@ -30,7 +30,6 @@ import (
 	"github.com/containerd/containerd/plugin"
 	"github.com/containerd/containerd/services"
 	ptypes "github.com/gogo/protobuf/types"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -72,9 +71,9 @@ type local struct {
 	publisher events.Publisher
 }
 
-var _ imagesapi.ImagesClient = &local{}
+var _ imagesapi.ImagesServer = &local{}
 
-func (l *local) Get(ctx context.Context, req *imagesapi.GetImageRequest, _ ...grpc.CallOption) (*imagesapi.GetImageResponse, error) {
+func (l *local) Get(ctx context.Context, req *imagesapi.GetImageRequest) (*imagesapi.GetImageResponse, error) {
 	image, err := l.store.Get(ctx, req.Name)
 	if err != nil {
 		return nil, errdefs.ToGRPC(err)
@@ -86,7 +85,7 @@ func (l *local) Get(ctx context.Context, req *imagesapi.GetImageRequest, _ ...gr
 	}, nil
 }
 
-func (l *local) List(ctx context.Context, req *imagesapi.ListImagesRequest, _ ...grpc.CallOption) (*imagesapi.ListImagesResponse, error) {
+func (l *local) List(ctx context.Context, req *imagesapi.ListImagesRequest) (*imagesapi.ListImagesResponse, error) {
 	images, err := l.store.List(ctx, req.Filters...)
 	if err != nil {
 		return nil, errdefs.ToGRPC(err)
@@ -97,7 +96,7 @@ func (l *local) List(ctx context.Context, req *imagesapi.ListImagesRequest, _ ..
 	}, nil
 }
 
-func (l *local) Create(ctx context.Context, req *imagesapi.CreateImageRequest, _ ...grpc.CallOption) (*imagesapi.CreateImageResponse, error) {
+func (l *local) Create(ctx context.Context, req *imagesapi.CreateImageRequest) (*imagesapi.CreateImageResponse, error) {
 	log.G(ctx).WithField("name", req.Image.Name).WithField("target", req.Image.Target.Digest).Debugf("create image")
 	if req.Image.Name == "" {
 		return nil, status.Errorf(codes.InvalidArgument, "Image.Name required")
@@ -125,7 +124,7 @@ func (l *local) Create(ctx context.Context, req *imagesapi.CreateImageRequest, _
 
 }
 
-func (l *local) Update(ctx context.Context, req *imagesapi.UpdateImageRequest, _ ...grpc.CallOption) (*imagesapi.UpdateImageResponse, error) {
+func (l *local) Update(ctx context.Context, req *imagesapi.UpdateImageRequest) (*imagesapi.UpdateImageResponse, error) {
 	if req.Image.Name == "" {
 		return nil, status.Errorf(codes.InvalidArgument, "Image.Name required")
 	}
@@ -157,7 +156,7 @@ func (l *local) Update(ctx context.Context, req *imagesapi.UpdateImageRequest, _
 	return &resp, nil
 }
 
-func (l *local) Delete(ctx context.Context, req *imagesapi.DeleteImageRequest, _ ...grpc.CallOption) (*ptypes.Empty, error) {
+func (l *local) Delete(ctx context.Context, req *imagesapi.DeleteImageRequest) (*ptypes.Empty, error) {
 	log.G(ctx).WithField("name", req.Name).Debugf("delete image")
 
 	if err := l.store.Delete(ctx, req.Name); err != nil {

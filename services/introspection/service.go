@@ -52,21 +52,21 @@ func init() {
 
 			allPluginsPB := pluginsToPB(ic.GetAll())
 
-			localClient, ok := i.(*Local)
+			localServer, ok := i.(*Local)
 			if !ok {
 				return nil, errors.Errorf("Could not create a local client for introspection service")
 			}
-			localClient.UpdateLocal(ic.Root, allPluginsPB)
+			localServer.UpdateLocal(ic.Root, allPluginsPB)
 
 			return &server{
-				local: localClient,
+				local: localServer,
 			}, nil
 		},
 	})
 }
 
 type server struct {
-	local api.IntrospectionClient
+	local api.IntrospectionServer
 }
 
 var _ = (api.IntrospectionServer)(&server{})

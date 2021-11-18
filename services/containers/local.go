@@ -18,7 +18,6 @@ package containers
 
 import (
 	"context"
-	"io"
 
 	eventstypes "github.com/containerd/containerd/api/events"
 	api "github.com/containerd/containerd/api/services/containers/v1"
@@ -30,9 +29,7 @@ import (
 	"github.com/containerd/containerd/services"
 	ptypes "github.com/gogo/protobuf/types"
 	bolt "go.etcd.io/bbolt"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	grpcm "google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -70,9 +67,9 @@ type local struct {
 	publisher events.Publisher
 }
 
-var _ api.ContainersClient = &local{}
+var _ api.ContainersServer = &local{}
 
-func (l *local) Get(ctx context.Context, req *api.GetContainerRequest, _ ...grpc.CallOption) (*api.GetContainerResponse, error) {
+func (l *local) Get(ctx context.Context, req *api.GetContainerRequest) (*api.GetContainerResponse, error) {
 	var resp api.GetContainerResponse
 
 	return &resp, errdefs.ToGRPC(l.withStoreView(ctx, func(ctx context.Context) error {
@@ -87,7 +84,7 @@ func (l *local) Get(ctx context.Context, req *api.GetContainerRequest, _ ...grpc
 	}))
 }
 
-func (l *local) List(ctx context.Context, req *api.ListContainersRequest, _ ...grpc.CallOption) (*api.ListContainersResponse, error) {
+func (l *local) List(ctx context.Context, req *api.ListContainersRequest) (*api.ListContainersResponse, error) {
 	var resp api.ListContainersResponse
 	return &resp, errdefs.ToGRPC(l.withStoreView(ctx, func(ctx context.Context) error {
 		containers, err := l.Store.List(ctx, req.Filters...)
@@ -99,21 +96,26 @@ func (l *local) List(ctx context.Context, req *api.ListContainersRequest, _ ...g
 	}))
 }
 
-func (l *local) ListStream(ctx context.Context, req *api.ListContainersRequest, _ ...grpc.CallOption) (api.Containers_ListStreamClient, error) {
-	stream := &localStream{
-		ctx: ctx,
+func (l *local) ListStream(req *api.ListContainersRequest, streamServer api.Containers_ListStreamServer) error {
+	ctx := streamServer.Context()
+	containers, err := l.Store.List(ctx, req.Filters...)
+	if err != nil {
+		return errdefs.ToGRPC(err)
 	}
-	return stream, errdefs.ToGRPC(l.withStoreView(ctx, func(ctx context.Context) error {
-		containers, err := l.Store.List(ctx, req.Filters...)
+
+	for _, container := range containers {
+		c := containerToProto(&container)
+		err = streamServer.Send(&api.ListContainerMessage{
+			Container: &c,
+		})
 		if err != nil {
-			return err
+			return errdefs.ToGRPC(err)
 		}
-		stream.containers = containersToProto(containers)
-		return nil
-	}))
+	}
+	return nil
 }
 
-func (l *local) Create(ctx context.Context, req *api.CreateContainerRequest, _ ...grpc.CallOption) (*api.CreateContainerResponse, error) {
+func (l *local) Create(ctx context.Context, req *api.CreateContainerRequest) (*api.CreateContainerResponse, error) {
 	var resp api.CreateContainerResponse
 
 	if err := l.withStoreUpdate(ctx, func(ctx context.Context) error {
@@ -144,7 +146,7 @@ func (l *local) Create(ctx context.Context, req *api.CreateContainerRequest, _ .
 	return &resp, nil
 }
 
-func (l *local) Update(ctx context.Context, req *api.UpdateContainerRequest, _ ...grpc.CallOption) (*api.UpdateContainerResponse, error) {
+func (l *local) Update(ctx context.Context, req *api.UpdateContainerRequest) (*api.UpdateContainerResponse, error) {
 	if req.Container.ID == "" {
 		return nil, status.Errorf(codes.InvalidArgument, "Container.ID required")
 	}
@@ -182,7 +184,7 @@ func (l *local) Update(ctx context.Context, req *api.UpdateContainerRequest, _ .
 	return &resp, nil
 }
 
-func (l *local) Delete(ctx context.Context, req *api.DeleteContainerRequest, _ ...grpc.CallOption) (*ptypes.Empty, error) {
+func (l *local) Delete(ctx context.Context, req *api.DeleteContainerRequest) (*ptypes.Empty, error) {
 	if err := l.withStoreUpdate(ctx, func(ctx context.Context) error {
 		return l.Store.Delete(ctx, req.ID)
 	}); err != nil {
@@ -210,45 +212,4 @@ func (l *local) withStoreView(ctx context.Context, fn func(ctx context.Context) 
 
 func (l *local) withStoreUpdate(ctx context.Context, fn func(ctx context.Context) error) error {
 	return l.db.Update(l.withStore(ctx, fn))
-}
-
-type localStream struct {
-	ctx        context.Context
-	containers []api.Container
-	i          int
-}
-
-func (s *localStream) Recv() (*api.ListContainerMessage, error) {
-	if s.i >= len(s.containers) {
-		return nil, io.EOF
-	}
-	c := s.containers[s.i]
-	s.i++
-	return &api.ListContainerMessage{
-		Container: &c,
-	}, nil
-}
-
-func (s *localStream) Context() context.Context {
-	return s.ctx
-}
-
-func (s *localStream) CloseSend() error {
-	return nil
-}
-
-func (s *localStream) Header() (grpcm.MD, error) {
-	return nil, nil
-}
-
-func (s *localStream) Trailer() grpcm.MD {
-	return nil
-}
-
-func (s *localStream) SendMsg(m interface{}) error {
-	return nil
-}
-
-func (s *localStream) RecvMsg(m interface{}) error {
-	return nil
 }

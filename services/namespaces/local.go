@@ -30,7 +30,6 @@ import (
 	"github.com/containerd/containerd/services"
 	ptypes "github.com/gogo/protobuf/types"
 	bolt "go.etcd.io/bbolt"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -68,9 +67,9 @@ type local struct {
 	publisher events.Publisher
 }
 
-var _ api.NamespacesClient = &local{}
+var _ api.NamespacesServer = &local{}
 
-func (l *local) Get(ctx context.Context, req *api.GetNamespaceRequest, _ ...grpc.CallOption) (*api.GetNamespaceResponse, error) {
+func (l *local) Get(ctx context.Context, req *api.GetNamespaceRequest) (*api.GetNamespaceResponse, error) {
 	var resp api.GetNamespaceResponse
 
 	return &resp, l.withStoreView(ctx, func(ctx context.Context, store namespaces.Store) error {
@@ -88,7 +87,7 @@ func (l *local) Get(ctx context.Context, req *api.GetNamespaceRequest, _ ...grpc
 	})
 }
 
-func (l *local) List(ctx context.Context, req *api.ListNamespacesRequest, _ ...grpc.CallOption) (*api.ListNamespacesResponse, error) {
+func (l *local) List(ctx context.Context, req *api.ListNamespacesRequest) (*api.ListNamespacesResponse, error) {
 	var resp api.ListNamespacesResponse
 
 	return &resp, l.withStoreView(ctx, func(ctx context.Context, store namespaces.Store) error {
@@ -115,7 +114,7 @@ func (l *local) List(ctx context.Context, req *api.ListNamespacesRequest, _ ...g
 	})
 }
 
-func (l *local) Create(ctx context.Context, req *api.CreateNamespaceRequest, _ ...grpc.CallOption) (*api.CreateNamespaceResponse, error) {
+func (l *local) Create(ctx context.Context, req *api.CreateNamespaceRequest) (*api.CreateNamespaceResponse, error) {
 	var resp api.CreateNamespaceResponse
 
 	if err := l.withStoreUpdate(ctx, func(ctx context.Context, store namespaces.Store) error {
@@ -146,7 +145,7 @@ func (l *local) Create(ctx context.Context, req *api.CreateNamespaceRequest, _ .
 
 }
 
-func (l *local) Update(ctx context.Context, req *api.UpdateNamespaceRequest, _ ...grpc.CallOption) (*api.UpdateNamespaceResponse, error) {
+func (l *local) Update(ctx context.Context, req *api.UpdateNamespaceRequest) (*api.UpdateNamespaceResponse, error) {
 	var resp api.UpdateNamespaceResponse
 	if err := l.withStoreUpdate(ctx, func(ctx context.Context, store namespaces.Store) error {
 		if req.UpdateMask != nil && len(req.UpdateMask.Paths) > 0 {
@@ -198,7 +197,7 @@ func (l *local) Update(ctx context.Context, req *api.UpdateNamespaceRequest, _ .
 	return &resp, nil
 }
 
-func (l *local) Delete(ctx context.Context, req *api.DeleteNamespaceRequest, _ ...grpc.CallOption) (*ptypes.Empty, error) {
+func (l *local) Delete(ctx context.Context, req *api.DeleteNamespaceRequest) (*ptypes.Empty, error) {
 	if err := l.withStoreUpdate(ctx, func(ctx context.Context, store namespaces.Store) error {
 		return errdefs.ToGRPC(store.Delete(ctx, req.Name))
 	}); err != nil {

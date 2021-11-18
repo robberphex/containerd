@@ -28,7 +28,6 @@ import (
 	"github.com/containerd/containerd/services"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc"
 )
 
 type config struct {
@@ -89,9 +88,9 @@ type local struct {
 	differs []differ
 }
 
-var _ diffapi.DiffClient = &local{}
+var _ diffapi.DiffServer = &local{}
 
-func (l *local) Apply(ctx context.Context, er *diffapi.ApplyRequest, _ ...grpc.CallOption) (*diffapi.ApplyResponse, error) {
+func (l *local) Apply(ctx context.Context, er *diffapi.ApplyRequest) (*diffapi.ApplyResponse, error) {
 	var (
 		ocidesc ocispec.Descriptor
 		err     error
@@ -121,7 +120,7 @@ func (l *local) Apply(ctx context.Context, er *diffapi.ApplyRequest, _ ...grpc.C
 
 }
 
-func (l *local) Diff(ctx context.Context, dr *diffapi.DiffRequest, _ ...grpc.CallOption) (*diffapi.DiffResponse, error) {
+func (l *local) Diff(ctx context.Context, dr *diffapi.DiffRequest) (*diffapi.DiffResponse, error) {
 	var (
 		ocidesc ocispec.Descriptor
 		err     error
