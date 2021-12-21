@@ -6,8 +6,9 @@ package version
 import (
 	context "context"
 	fmt "fmt"
+	types "github.com/containerd/containerd/api/types"
 	proto "github.com/gogo/protobuf/proto"
-	types "github.com/gogo/protobuf/types"
+	types1 "github.com/gogo/protobuf/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -30,11 +31,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type VersionResponse struct {
-	Version              string   `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`
-	Revision             string   `protobuf:"bytes,2,opt,name=revision,proto3" json:"revision,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Version              string            `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`
+	Revision             string            `protobuf:"bytes,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	Platforms            []*types.Platform `protobuf:"bytes,3,rep,name=platforms,proto3" json:"platforms,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
 }
 
 func (m *VersionResponse) Reset()      { *m = VersionResponse{} }
@@ -78,23 +80,26 @@ func init() {
 }
 
 var fileDescriptor_128109001e578ffe = []byte{
-	// 243 bytes of a gzipped FileDescriptorProto
+	// 292 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x72, 0x4b, 0xcf, 0x2c, 0xc9,
 	0x28, 0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0x4f, 0xce, 0xcf, 0x2b, 0x49, 0xcc, 0xcc, 0x4b, 0x2d,
 	0x4a, 0x41, 0x66, 0x26, 0x16, 0x64, 0xea, 0x17, 0xa7, 0x16, 0x95, 0x65, 0x26, 0xa7, 0x16, 0xeb,
 	0x97, 0xa5, 0x16, 0x15, 0x67, 0xe6, 0xe7, 0xe9, 0x97, 0x19, 0xc2, 0x98, 0x7a, 0x05, 0x45, 0xf9,
-	0x25, 0xf9, 0x42, 0x72, 0x08, 0x1d, 0x7a, 0x30, 0xd5, 0x7a, 0x30, 0x25, 0x65, 0x86, 0x52, 0xd2,
-	0xe9, 0xf9, 0xf9, 0xe9, 0x39, 0xa9, 0xfa, 0x60, 0xd5, 0x49, 0xa5, 0x69, 0xfa, 0xa9, 0xb9, 0x05,
-	0x25, 0x95, 0x10, 0xcd, 0x52, 0x22, 0xe9, 0xf9, 0xe9, 0xf9, 0x60, 0xa6, 0x3e, 0x88, 0x05, 0x11,
-	0x55, 0x72, 0xe7, 0xe2, 0x0f, 0x83, 0x18, 0x10, 0x94, 0x5a, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x2a,
-	0x24, 0xc1, 0xc5, 0x0e, 0x35, 0x53, 0x82, 0x51, 0x81, 0x51, 0x83, 0x33, 0x08, 0xc6, 0x15, 0x92,
-	0xe2, 0xe2, 0x28, 0x4a, 0x2d, 0xcb, 0x04, 0x4b, 0x31, 0x81, 0xa5, 0xe0, 0x7c, 0xa3, 0x58, 0x2e,
-	0x76, 0xa8, 0x41, 0x42, 0x41, 0x08, 0xa6, 0x98, 0x1e, 0xc4, 0x49, 0x7a, 0x30, 0x27, 0xe9, 0xb9,
-	0x82, 0x9c, 0x24, 0xa5, 0xaf, 0x87, 0xdf, 0x2b, 0x7a, 0x68, 0x8e, 0x72, 0x8a, 0x3a, 0xf1, 0x50,
-	0x8e, 0xe1, 0xc6, 0x43, 0x39, 0x86, 0x86, 0x47, 0x72, 0x8c, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78,
-	0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0x63, 0x94, 0x03, 0xb9, 0x81, 0x6b, 0x0d, 0x65, 0x46, 0x30,
-	0x26, 0xb1, 0x81, 0x9d, 0x67, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x95, 0x0d, 0x52, 0x23, 0xa9,
-	0x01, 0x00, 0x00,
+	0x25, 0xf9, 0x42, 0x72, 0x08, 0x1d, 0x7a, 0x30, 0xd5, 0x7a, 0x30, 0x25, 0x65, 0x86, 0x52, 0x96,
+	0x44, 0xd9, 0x53, 0x52, 0x59, 0x90, 0x5a, 0xac, 0x5f, 0x90, 0x93, 0x58, 0x92, 0x96, 0x5f, 0x94,
+	0x0b, 0x31, 0x5a, 0x4a, 0x3a, 0x3d, 0x3f, 0x3f, 0x3d, 0x27, 0x55, 0x1f, 0xcc, 0x4b, 0x2a, 0x4d,
+	0xd3, 0x4f, 0xcd, 0x2d, 0x28, 0xa9, 0x84, 0x4a, 0x8a, 0xa4, 0xe7, 0xa7, 0xe7, 0x83, 0x99, 0xfa,
+	0x20, 0x16, 0x44, 0x54, 0xa9, 0x91, 0x91, 0x8b, 0x3f, 0x0c, 0x62, 0x79, 0x50, 0x6a, 0x71, 0x41,
+	0x7e, 0x5e, 0x71, 0xaa, 0x90, 0x04, 0x17, 0x3b, 0xd4, 0x3d, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x9c,
+	0x41, 0x30, 0xae, 0x90, 0x14, 0x17, 0x47, 0x51, 0x6a, 0x59, 0x26, 0x58, 0x8a, 0x09, 0x2c, 0x05,
+	0xe7, 0x0b, 0x59, 0x70, 0x71, 0xc2, 0x9c, 0x53, 0x2c, 0xc1, 0xac, 0xc0, 0xac, 0xc1, 0x6d, 0x24,
+	0xa5, 0x87, 0xe4, 0x57, 0xb0, 0x8b, 0xf5, 0x02, 0xa0, 0x4a, 0x82, 0x10, 0x8a, 0x8d, 0x62, 0xb9,
+	0xd8, 0xa1, 0x4e, 0x10, 0x0a, 0x42, 0x30, 0xc5, 0xf4, 0x20, 0xbe, 0xd1, 0x83, 0xf9, 0x46, 0xcf,
+	0x15, 0xe4, 0x1b, 0x29, 0x7d, 0x3d, 0xfc, 0x01, 0xa8, 0x87, 0xe6, 0x1d, 0xa7, 0xa8, 0x13, 0x0f,
+	0xe5, 0x18, 0x6e, 0x3c, 0x94, 0x63, 0x68, 0x78, 0x24, 0xc7, 0x78, 0xe2, 0x91, 0x1c, 0xe3, 0x85,
+	0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x46, 0x39, 0x90, 0x1b, 0xa5, 0xd6, 0x50, 0x66, 0x04,
+	0x53, 0x12, 0x1b, 0xd8, 0x79, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x10, 0xb8, 0x20, 0x3c,
+	0x1f, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -109,7 +114,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type VersionClient interface {
-	Version(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*VersionResponse, error)
+	Version(ctx context.Context, in *types1.Empty, opts ...grpc.CallOption) (*VersionResponse, error)
 }
 
 type versionClient struct {
@@ -120,7 +125,7 @@ func NewVersionClient(cc *grpc.ClientConn) VersionClient {
 	return &versionClient{cc}
 }
 
-func (c *versionClient) Version(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*VersionResponse, error) {
+func (c *versionClient) Version(ctx context.Context, in *types1.Empty, opts ...grpc.CallOption) (*VersionResponse, error) {
 	out := new(VersionResponse)
 	err := c.cc.Invoke(ctx, "/containerd.services.version.v1.Version/Version", in, out, opts...)
 	if err != nil {
@@ -131,14 +136,14 @@ func (c *versionClient) Version(ctx context.Context, in *types.Empty, opts ...gr
 
 // VersionServer is the server API for Version service.
 type VersionServer interface {
-	Version(context.Context, *types.Empty) (*VersionResponse, error)
+	Version(context.Context, *types1.Empty) (*VersionResponse, error)
 }
 
 // UnimplementedVersionServer can be embedded to have forward compatible implementations.
 type UnimplementedVersionServer struct {
 }
 
-func (*UnimplementedVersionServer) Version(ctx context.Context, req *types.Empty) (*VersionResponse, error) {
+func (*UnimplementedVersionServer) Version(ctx context.Context, req *types1.Empty) (*VersionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Version not implemented")
 }
 
@@ -147,7 +152,7 @@ func RegisterVersionServer(s *grpc.Server, srv VersionServer) {
 }
 
 func _Version_Version_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(types.Empty)
+	in := new(types1.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -159,7 +164,7 @@ func _Version_Version_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: "/containerd.services.version.v1.Version/Version",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VersionServer).Version(ctx, req.(*types.Empty))
+		return srv.(VersionServer).Version(ctx, req.(*types1.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -200,6 +205,20 @@ func (m *VersionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	if m.XXX_unrecognized != nil {
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.Platforms) > 0 {
+		for iNdEx := len(m.Platforms) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Platforms[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintVersion(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
 	}
 	if len(m.Revision) > 0 {
 		i -= len(m.Revision)
@@ -243,6 +262,12 @@ func (m *VersionResponse) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovVersion(uint64(l))
 	}
+	if len(m.Platforms) > 0 {
+		for _, e := range m.Platforms {
+			l = e.Size()
+			n += 1 + l + sovVersion(uint64(l))
+		}
+	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
 	}
@@ -259,9 +284,15 @@ func (this *VersionResponse) String() string {
 	if this == nil {
 		return "nil"
 	}
+	repeatedStringForPlatforms := "[]*Platform{"
+	for _, f := range this.Platforms {
+		repeatedStringForPlatforms += strings.Replace(fmt.Sprintf("%v", f), "Platform", "types.Platform", 1) + ","
+	}
+	repeatedStringForPlatforms += "}"
 	s := strings.Join([]string{`&VersionResponse{`,
 		`Version:` + fmt.Sprintf("%v", this.Version) + `,`,
 		`Revision:` + fmt.Sprintf("%v", this.Revision) + `,`,
+		`Platforms:` + repeatedStringForPlatforms + `,`,
 		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
 		`}`,
 	}, "")
@@ -367,6 +398,40 @@ func (m *VersionResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Revision = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Platforms", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowVersion
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthVersion
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthVersion
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Platforms = append(m.Platforms, &types.Platform{})
+			if err := m.Platforms[len(m.Platforms)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

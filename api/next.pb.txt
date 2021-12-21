@@ -4485,6 +4485,7 @@ file {
 file {
   name: "github.com/containerd/containerd/api/services/version/v1/version.proto"
   package: "containerd.services.version.v1"
+  dependency: "github.com/containerd/containerd/api/types/platform.proto"
   dependency: "google/protobuf/empty.proto"
   dependency: "gogoproto/gogo.proto"
   message_type {
@@ -4503,6 +4504,14 @@ file {
       type: TYPE_STRING
       json_name: "revision"
     }
+    field {
+      name: "platforms"
+      number: 3
+      label: LABEL_REPEATED
+      type: TYPE_MESSAGE
+      type_name: ".containerd.types.Platform"
+      json_name: "platforms"
+    }
   }
   service {
     name: "Version"
@@ -4515,6 +4524,6 @@ file {
   options {
     go_package: "github.com/containerd/containerd/api/services/version/v1;version"
   }
-  weak_dependency: 1
+  weak_dependency: 2
   syntax: "proto3"
 }
