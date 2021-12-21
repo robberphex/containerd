@@ -147,7 +147,9 @@ func New(address string, opts ...ClientOpt) (*Client, error) {
 		connector := func() (*grpc.ClientConn, error) {
 			ctx, cancel := context.WithTimeout(context.Background(), copts.timeout)
 			defer cancel()
-			if !strings.HasPrefix(address, "tcp://") {
+			if strings.HasPrefix(address, "tcp://") {
+				//address = strings.TrimPrefix(address, "tcp://")
+			} else {
 				address = dialer.DialAddress(address)
 			}
 			conn, err := grpc.DialContext(ctx, address, gopts...)
