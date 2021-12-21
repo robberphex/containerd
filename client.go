@@ -154,6 +154,7 @@ func New(address string, opts ...ClientOpt) (*Client, error) {
 			}
 			conn, err := grpc.DialContext(ctx, address, gopts...)
 			if err != nil {
+				fmt.Printf("grpc.DialContext err: %+v\n\n", err)
 				return nil, errors.Wrapf(err, "failed to dial %q", address)
 			}
 			return conn, nil
