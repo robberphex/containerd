@@ -713,12 +713,19 @@ func (c *Client) Conn() *grpc.ClientConn {
 	return c.conn
 }
 
+type Platform struct {
+	OS           string
+	Architecture string
+}
+
 // Version of containerd
 type Version struct {
 	// Version number
 	Version string
 	// Revision from git that was built
 	Revision string
+
+	Platforms []Platform
 }
 
 // Version returns the version of containerd that the client is connected to
@@ -733,9 +740,17 @@ func (c *Client) Version(ctx context.Context) (Version, error) {
 	if err != nil {
 		return Version{}, err
 	}
+	var platforms []Platform
+	for _, p := range response.Platforms {
+		platforms = append(platforms, Platform{
+			OS:           p.OS,
+			Architecture: p.Architecture,
+		})
+	}
 	return Version{
-		Version:  response.Version,
-		Revision: response.Revision,
+		Version:   response.Version,
+		Revision:  response.Revision,
+		Platforms: platforms,
 	}, nil
 }
 
