@@ -18,8 +18,10 @@ package version
 
 import (
 	"context"
+	"runtime"
 
 	api "github.com/containerd/containerd/api/services/version/v1"
+	"github.com/containerd/containerd/api/types"
 	"github.com/containerd/containerd/plugin"
 	ctrdversion "github.com/containerd/containerd/version"
 	ptypes "github.com/gogo/protobuf/types"
@@ -52,5 +54,11 @@ func (s *service) Version(ctx context.Context, _ *ptypes.Empty) (*api.VersionRes
 	return &api.VersionResponse{
 		Version:  ctrdversion.Version,
 		Revision: ctrdversion.Revision,
+		Platforms: []*types.Platform{
+			&types.Platform{
+				OS:           runtime.GOOS,
+				Architecture: runtime.GOARCH,
+			},
+		},
 	}, nil
 }
