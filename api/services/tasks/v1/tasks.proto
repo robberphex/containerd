@@ -90,11 +90,26 @@ message CreateTaskRequest {
 	google.protobuf.Any options = 9;
 
 	string runtime_path = 10;
+
+	// Whether to stream stdin.
+	// One of `stdin`, `stdout`, and `stderr` MUST be true.
+	bool stdin_needed = 11;
+	// Whether to stream stdout.
+	// One of `stdin`, `stdout`, and `stderr` MUST be true.
+	bool stdout_needed = 12;
+	// Whether to stream stderr.
+	// One of `stdin`, `stdout`, and `stderr` MUST be true.
+	// If `tty` is true, `stderr` MUST be false. Multiplexing is not supported
+	// in this case. The output of stdout and stderr will be combined to a
+	// single stream.
+	bool stderr_needed = 13;
 }
 
 message CreateTaskResponse {
 	string container_id = 1;
 	uint32 pid = 2;
+	// Fully qualified URI(without host) of the attach streaming server.
+	string url = 3;
 }
 
 message StartRequest {
@@ -104,8 +119,6 @@ message StartRequest {
 
 message StartResponse {
 	uint32 pid = 1;
-	// Fully qualified URI(without host) of the attach streaming server.
-	string url = 2;
 }
 
 message DeleteTaskRequest {
