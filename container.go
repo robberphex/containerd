@@ -208,23 +208,23 @@ func (c *container) Image(ctx context.Context) (Image, error) {
 }
 
 func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...NewTaskOpts) (_ Task, err error) {
-	i, err := ioCreate(c.id)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err != nil && i != nil {
-			i.Cancel()
-			i.Close()
-		}
-	}()
-	cfg := i.Config()
+	//i, err := ioCreate(c.id)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//defer func() {
+	//	if err != nil && i != nil {
+	//		i.Cancel()
+	//		i.Close()
+	//	}
+	//}()
+	//cfg := i.Config()
 	request := &tasks.CreateTaskRequest{
 		ContainerID: c.id,
-		Terminal:    cfg.Terminal,
-	//	Stdin:       cfg.Stdin,
-	//	Stdout:      cfg.Stdout,
-	//	Stderr:      cfg.Stderr,
+		Terminal:    false,
+		//	Stdin:       cfg.Stdin,
+		//	Stdout:      cfg.Stdout,
+		//	Stderr:      cfg.Stderr,
 	}
 	r, err := c.get(ctx)
 	if err != nil {
@@ -288,9 +288,9 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 	}
 	t := &task{
 		client: c.client,
-		io:     i,
-		id:     c.id,
-		c:      c,
+		//io:     i,
+		id: c.id,
+		c:  c,
 	}
 	if info.Checkpoint != nil {
 		request.Checkpoint = info.Checkpoint
