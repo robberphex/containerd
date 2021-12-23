@@ -222,9 +222,9 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 	request := &tasks.CreateTaskRequest{
 		ContainerID: c.id,
 		Terminal:    cfg.Terminal,
-		Stdin:       cfg.Stdin,
-		Stdout:      cfg.Stdout,
-		Stderr:      cfg.Stderr,
+	//	Stdin:       cfg.Stdin,
+	//	Stdout:      cfg.Stdout,
+	//	Stderr:      cfg.Stderr,
 	}
 	r, err := c.get(ctx)
 	if err != nil {

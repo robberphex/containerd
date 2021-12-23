@@ -104,6 +104,8 @@ message StartRequest {
 
 message StartResponse {
 	uint32 pid = 1;
+	// Fully qualified URI(without host) of the attach streaming server.
+	string url = 2;
 }
 
 message DeleteTaskRequest {
