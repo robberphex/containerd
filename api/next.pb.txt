@@ -3828,6 +3828,27 @@ file {
       type: TYPE_STRING
       json_name: "runtimePath"
     }
+    field {
+      name: "stdin_needed"
+      number: 11
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "stdinNeeded"
+    }
+    field {
+      name: "stdout_needed"
+      number: 12
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "stdoutNeeded"
+    }
+    field {
+      name: "stderr_needed"
+      number: 13
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "stderrNeeded"
+    }
   }
   message_type {
     name: "CreateTaskResponse"
@@ -3844,6 +3865,13 @@ file {
       label: LABEL_OPTIONAL
       type: TYPE_UINT32
       json_name: "pid"
+    }
+    field {
+      name: "url"
+      number: 3
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "url"
     }
   }
   message_type {
