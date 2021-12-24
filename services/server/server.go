@@ -320,6 +320,10 @@ func (s *Server) ServeGRPC(l net.Listener) error {
 	return trapClosedConnErr(s.grpcServer.Serve(l))
 }
 
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.grpcServer.ServeHTTP(w, r)
+}
+
 // ServeTTRPC provides the containerd ttrpc APIs on the provided listener
 func (s *Server) ServeTTRPC(l net.Listener) error {
 	return trapClosedConnErr(s.ttrpcServer.Serve(context.Background(), l))

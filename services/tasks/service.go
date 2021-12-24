@@ -51,6 +51,11 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
+			//s := &server{
+			//	config:  config,
+			//	runtime: &criAdapter{runtime},
+			//	cache:   newRequestCache(),
+			//}
 			return &service{local: i.(api.TasksClient)}, nil
 		},
 	})

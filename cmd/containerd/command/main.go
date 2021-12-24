@@ -21,10 +21,12 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/containerd/containerd/defaults"
@@ -270,7 +272,18 @@ can be used and modified as necessary as a custom configuration.`
 		if err != nil {
 			return errors.Wrapf(err, "failed to get listener for main endpoint")
 		}
-		serve(ctx, l, server.ServeGRPC)
+		mux := GetHTTPServeMux()
+		err = http.Serve(l,
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
+					server.ServeHTTP(w, r)
+				} else {
+					mux.ServeHTTP(w, r)
+				}
+				return
+			}),
+		)
+		fmt.Printf("http.Serve err: %+v\n", err)
 
 		if err := notifyReady(ctx); err != nil {
 			log.G(ctx).WithError(err).Warn("notify ready failed")
@@ -281,6 +294,15 @@ can be used and modified as necessary as a custom configuration.`
 		return nil
 	}
 	return app
+}
+
+func GetHTTPServeMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("robberphex: go-grpc-example"))
+	})
+
+	return mux
 }
 
 func serve(ctx gocontext.Context, l net.Listener, serveFunc func(net.Listener) error) {
