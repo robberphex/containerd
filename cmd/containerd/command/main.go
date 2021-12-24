@@ -20,6 +20,8 @@ import (
 	gocontext "context"
 	"fmt"
 	"github.com/containerd/containerd/services/streaming"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 	"io"
 	"net"
 	"net/http"
@@ -278,16 +280,23 @@ can be used and modified as necessary as a custom configuration.`
 		if err != nil {
 			return errors.Wrapf(err, "failed to get listener for main endpoint")
 		}
+		serve(ctx, l, server.ServeGRPC)
 		mux := GetHTTPServeMux(s)
+		h2s := &http2.Server{
+			// ...
+		}
 		err = http.Serve(l,
-			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
+			h2c.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.ProtoMajor == 2 &&
+					strings.HasPrefix(r.Header.Get("Content-Type"), "application/grpc") {
 					server.ServeHTTP(w, r)
 				} else {
 					mux.ServeHTTP(w, r)
 				}
 				return
 			}),
+				h2s,
+			),
 		)
 		fmt.Printf("http.Serve err: %+v\n", err)
 
@@ -304,7 +313,7 @@ can be used and modified as necessary as a custom configuration.`
 
 func GetHTTPServeMux(s streaming.Server) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("robberphex: go-grpc-example"))
 	})
 	mux.HandleFunc("/", s.ServeHTTP)
