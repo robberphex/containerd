@@ -221,7 +221,7 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 	//cfg := i.Config()
 	request := &tasks.CreateTaskRequest{
 		ContainerID: c.id,
-		Terminal:    false,
+		Terminal:    true,
 		//	Stdin:       cfg.Stdin,
 		//	Stdout:      cfg.Stdout,
 		//	Stderr:      cfg.Stderr,
