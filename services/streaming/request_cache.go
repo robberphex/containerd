@@ -73,6 +73,25 @@ func (c *requestCache) Insert(req request) (token string, err error) {
 	return token, nil
 }
 
+// Consume the token (remove it from the cache) and return the cached request, if found.
+func (c *requestCache) Consume(token string) (req request, found bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	ele, ok := c.tokens[token]
+	if !ok {
+		return nil, false
+	}
+	c.ll.Remove(ele)
+	delete(c.tokens, token)
+
+	entry := ele.Value.(*cacheEntry)
+	if c.clock.Now().After(entry.expireTime) {
+		// Entry already expired.
+		return nil, false
+	}
+	return entry.req, true
+}
+
 // uniqueToken generates a random URL-safe token and ensures uniqueness.
 func (c *requestCache) uniqueToken() (string, error) {
 	const maxTries = 10

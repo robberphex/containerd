@@ -19,6 +19,7 @@ package command
 import (
 	gocontext "context"
 	"fmt"
+	"github.com/containerd/containerd/services/streaming"
 	"io"
 	"net"
 	"net/http"
@@ -187,6 +188,11 @@ can be used and modified as necessary as a custom configuration.`
 			err error
 		}
 
+		s, err := streaming.NewServer()
+		if err != nil {
+			return errors.Wrapf(err, "failed to streaming.NewServer")
+		}
+
 		// run server initialization in a goroutine so we don't end up blocking important things like SIGTERM handling
 		// while the server is initializing.
 		// As an example opening the bolt database will block forever if another containerd is already running and containerd
@@ -272,7 +278,7 @@ can be used and modified as necessary as a custom configuration.`
 		if err != nil {
 			return errors.Wrapf(err, "failed to get listener for main endpoint")
 		}
-		mux := GetHTTPServeMux()
+		mux := GetHTTPServeMux(s)
 		err = http.Serve(l,
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
@@ -296,12 +302,12 @@ can be used and modified as necessary as a custom configuration.`
 	return app
 }
 
-func GetHTTPServeMux() *http.ServeMux {
+func GetHTTPServeMux(s streaming.Server) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("robberphex: go-grpc-example"))
 	})
-
+	mux.HandleFunc("/", s.ServeHTTP)
 	return mux
 }
 
