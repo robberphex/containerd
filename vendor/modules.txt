@@ -254,6 +254,9 @@ github.com/google/gofuzz
 # github.com/google/uuid v1.2.0
 ## explicit
 github.com/google/uuid
+# github.com/gorilla/websocket v1.4.2
+## explicit
+github.com/gorilla/websocket
 # github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 ## explicit
 github.com/grpc-ecosystem/go-grpc-middleware
