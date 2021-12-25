@@ -18,6 +18,7 @@ package plugin
 
 import (
 	"context"
+	"github.com/containerd/containerd/services/streaming"
 	"path/filepath"
 
 	"github.com/containerd/containerd/errdefs"
@@ -34,6 +35,8 @@ type InitContext struct {
 	Config       interface{}
 	Address      string
 	TTRPCAddress string
+
+	StreamServer streaming.Server
 
 	// deprecated: will be removed in 2.0, use plugin.EventType
 	Events *exchange.Exchange

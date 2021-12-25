@@ -21,6 +21,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"expvar"
+	"github.com/containerd/containerd/services/streaming"
 	"io"
 	"net"
 	"net/http"
@@ -110,7 +111,7 @@ func CreateTopLevelDirectories(config *srvconfig.Config) error {
 }
 
 // New creates and initializes a new containerd server
-func New(ctx context.Context, config *srvconfig.Config) (*Server, error) {
+func New(ctx context.Context, config *srvconfig.Config, streamServer streaming.Server) (*Server, error) {
 	if err := apply(ctx, config); err != nil {
 		return nil, err
 	}
@@ -227,6 +228,7 @@ func New(ctx context.Context, config *srvconfig.Config) (*Server, error) {
 			config.Root,
 			config.State,
 		)
+		initContext.StreamServer = streamServer
 		initContext.Events = events
 		initContext.Address = config.GRPC.Address
 		initContext.TTRPCAddress = config.TTRPC.Address

@@ -203,7 +203,7 @@ can be used and modified as necessary as a custom configuration.`
 		go func() {
 			defer close(chsrv)
 
-			server, err := server.New(ctx, config)
+			server, err := server.New(ctx, config, s)
 			if err != nil {
 				select {
 				case chsrv <- srvResp{err: err}:

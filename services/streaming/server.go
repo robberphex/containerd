@@ -2,6 +2,7 @@ package streaming
 
 import (
 	"github.com/containerd/containerd/api/services/tasks/v1"
+	"github.com/containerd/containerd/services/streaming/remotecommand"
 	"github.com/emicklei/go-restful"
 	"net/http"
 	"net/url"
@@ -14,7 +15,7 @@ type Server interface {
 
 	// Get the serving URL for the requests.
 	// Requests must not be nil. Responses may be nil iff an error is returned.
-	GetCreateTask(*tasks.CreateTaskRequest) (string, error)
+	GetCreateTask(r *tasks.CreateTaskRequest) (string, error)
 }
 
 type server struct {
@@ -74,35 +75,29 @@ func (s *server) buildURL(method, token string) string {
 }
 
 func (s *server) serveExec(req *restful.Request, resp *restful.Response) {
-	//token := req.PathParameter("token")
-	//cachedRequest, ok := s.cache.Consume(token)
-	//if !ok {
-	//	http.NotFound(resp.ResponseWriter, req.Request)
-	//	return
-	//}
-	//exec, ok := cachedRequest.(*runtimeapi.ExecRequest)
-	//if !ok {
-	//	http.NotFound(resp.ResponseWriter, req.Request)
-	//	return
-	//}
-	//
-	//streamOpts := &remotecommandserver.Options{
-	//	Stdin:  exec.Stdin,
-	//	Stdout: exec.Stdout,
-	//	Stderr: exec.Stderr,
-	//	TTY:    exec.Tty,
-	//}
-	//
-	//remotecommandserver.ServeExec(
-	//	resp.ResponseWriter,
-	//	req.Request,
-	//	s.runtime,
-	//	"", // unused: podName
-	//	"", // unusued: podUID
-	//	exec.ContainerId,
-	//	exec.Cmd,
-	//	streamOpts,
-	//	s.config.StreamIdleTimeout,
-	//	s.config.StreamCreationTimeout,
-	//	s.config.SupportedRemoteCommandProtocols)
+	token := req.PathParameter("token")
+	cachedRequest, ok := s.cache.Consume(token)
+	if !ok {
+		http.NotFound(resp.ResponseWriter, req.Request)
+		return
+	}
+	createTaskRequest, ok := cachedRequest.(*tasks.CreateTaskRequest)
+	if !ok {
+		http.NotFound(resp.ResponseWriter, req.Request)
+		return
+	}
+
+	streamOpts := &remotecommand.Options{
+		Stdin:  createTaskRequest.Stdin != "",
+		Stdout: createTaskRequest.Stdout != "",
+		Stderr: createTaskRequest.Stderr != "",
+		TTY:    createTaskRequest.Terminal,
+	}
+
+	remotecommand.ServeExec(
+		resp.ResponseWriter,
+		req.Request,
+		createTaskRequest,
+		streamOpts,
+	)
 }

@@ -189,6 +189,8 @@ type task struct {
 	io  cio.IO
 	id  string
 	pid uint32
+	// 日志文件path（websocket协议）
+	url string
 }
 
 // Spec returns the current OCI specification for the task

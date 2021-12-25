@@ -300,6 +300,7 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 		return nil, errdefs.FromGRPC(err)
 	}
 	t.pid = response.Pid
+	t.url = response.Url
 	return t, nil
 }
 

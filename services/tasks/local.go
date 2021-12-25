@@ -20,10 +20,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/containerd/containerd/defaults"
+	"github.com/containerd/containerd/services/streaming"
+	"github.com/containerd/fifo"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"time"
 
 	api "github.com/containerd/containerd/api/services/tasks/v1"
@@ -105,12 +109,13 @@ func initFunc(ic *plugin.InitContext) (interface{}, error) {
 
 	db := m.(*metadata.DB)
 	l := &local{
-		runtimes:   runtimes,
-		containers: metadata.NewContainerStore(db),
-		store:      db.ContentStore(),
-		publisher:  ep.(events.Publisher),
-		monitor:    monitor.(runtime.TaskMonitor),
-		v2Runtime:  v2r.(runtime.PlatformRuntime),
+		runtimes:     runtimes,
+		containers:   metadata.NewContainerStore(db),
+		store:        db.ContentStore(),
+		publisher:    ep.(events.Publisher),
+		monitor:      monitor.(runtime.TaskMonitor),
+		v2Runtime:    v2r.(runtime.PlatformRuntime),
+		streamServer: ic.StreamServer,
 	}
 	for _, r := range runtimes {
 		tasks, err := r.Tasks(ic.Context, true)
@@ -132,10 +137,11 @@ func initFunc(ic *plugin.InitContext) (interface{}, error) {
 }
 
 type local struct {
-	runtimes   map[string]runtime.PlatformRuntime
-	containers containers.Store
-	store      content.Store
-	publisher  events.Publisher
+	runtimes     map[string]runtime.PlatformRuntime
+	containers   containers.Store
+	store        content.Store
+	publisher    events.Publisher
+	streamServer streaming.Server
 
 	monitor   runtime.TaskMonitor
 	v2Runtime runtime.PlatformRuntime
@@ -174,14 +180,32 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 			return nil, err
 		}
 	}
+	// 处理io
+	err = os.MkdirAll(defaults.DefaultFIFODir, 0700)
+	if err != nil {
+		return nil, err
+	}
+	dir, err := os.MkdirTemp(defaults.DefaultFIFODir, "")
+	if err != nil {
+		return nil, err
+	}
+	io := runtime.IO{
+		Stdin:    filepath.Join(dir, container.ID+"-stdin"),
+		Stdout:   filepath.Join(dir, container.ID+"-stdout"),
+		Stderr:   filepath.Join(dir, container.ID+"-stderr"),
+		Terminal: r.Terminal,
+	}
+	r.Stdin = io.Stdin
+	r.Stdout = io.Stdout
+	r.Stderr = io.Stderr
+	fifos, err := openFifos(ctx, io)
+	if err != nil {
+		return nil, err
+	}
+	_ = fifos
 	opts := runtime.CreateOpts{
-		Spec: container.Spec,
-		IO: runtime.IO{
-			Stdin:    r.Stdin,
-			Stdout:   r.Stdout,
-			Stderr:   r.Stderr,
-			Terminal: r.Terminal,
-		},
+		Spec:           container.Spec,
+		IO:             io,
 		Checkpoint:     checkpointPath,
 		Runtime:        container.Runtime.Name,
 		RuntimeOptions: container.Runtime.Options,
@@ -225,7 +249,12 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get task pid")
 	}
+	urll, err := l.streamServer.GetCreateTask(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get task pid")
+	}
 	return &api.CreateTaskResponse{
+		Url:         urll,
 		ContainerID: r.ContainerID,
 		Pid:         pid,
 	}, nil
@@ -378,6 +407,41 @@ func (l *local) List(ctx context.Context, r *api.ListTasksRequest, _ ...grpc.Cal
 		addTasks(ctx, resp, tasks)
 	}
 	return resp, nil
+}
+
+type pipes struct {
+	Stdin  io.WriteCloser
+	Stdout io.ReadCloser
+	Stderr io.ReadCloser
+}
+
+func openFifos(ctx context.Context, fifos runtime.IO) (f pipes, retErr error) {
+	if fifos.Stdin != "" {
+		if f.Stdin, retErr = fifo.OpenFifo(ctx, fifos.Stdin, syscall.O_WRONLY|syscall.O_CREAT|syscall.O_NONBLOCK, 0700); retErr != nil {
+			return f, errors.Wrapf(retErr, "failed to open stdin fifo")
+		}
+		defer func() {
+			if retErr != nil && f.Stdin != nil {
+				f.Stdin.Close()
+			}
+		}()
+	}
+	if fifos.Stdout != "" {
+		if f.Stdout, retErr = fifo.OpenFifo(ctx, fifos.Stdout, syscall.O_RDONLY|syscall.O_CREAT|syscall.O_NONBLOCK, 0700); retErr != nil {
+			return f, errors.Wrapf(retErr, "failed to open stdout fifo")
+		}
+		defer func() {
+			if retErr != nil && f.Stdout != nil {
+				f.Stdout.Close()
+			}
+		}()
+	}
+	if !fifos.Terminal && fifos.Stderr != "" {
+		if f.Stderr, retErr = fifo.OpenFifo(ctx, fifos.Stderr, syscall.O_RDONLY|syscall.O_CREAT|syscall.O_NONBLOCK, 0700); retErr != nil {
+			return f, errors.Wrapf(retErr, "failed to open stderr fifo")
+		}
+	}
+	return f, nil
 }
 
 func addTasks(ctx context.Context, r *api.ListTasksResponse, tasks []runtime.Task) {
