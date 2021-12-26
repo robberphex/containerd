@@ -57,7 +57,7 @@ func NewServer() (Server, error) {
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("eddycjy: go-grpc-example\n"))
+	s.handler.ServeHTTP(w, r)
 }
 
 func (s *server) GetCreateTask(req *tasks.CreateTaskRequest) (string, error) {

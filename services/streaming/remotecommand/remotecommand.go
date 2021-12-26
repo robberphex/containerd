@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // StreamOptions holds information pertaining to the current streaming session:
@@ -131,6 +132,8 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 			log.Printf("recv: %v", nr)
 		}
 	}()
+
+	time.Sleep(time.Hour)
 
 	// Leverage the existing rest tools to get a connection with the correct
 	// TLS and headers
