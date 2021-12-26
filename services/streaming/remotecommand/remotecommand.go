@@ -93,8 +93,14 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 	dialer := gwebsocket.Dialer{
 		NetDialContext: func(ctx contextpkg.Context, network, addr string) (net.Conn, error) {
 			parts := strings.SplitN(e.address, "://", 2)
+			var address string
+			if len(parts) >= 2 {
+				network, address = parts[0], parts[1]
+			} else {
+				network, address = "unix", e.address
+			}
 			// todo tls dial
-			conn, err := net.Dial(parts[0], parts[1])
+			conn, err := net.Dial(network, address)
 			return conn, err
 		},
 	}
