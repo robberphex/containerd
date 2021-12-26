@@ -1,6 +1,8 @@
 package remotecommand
 
 import (
+	contextpkg "context"
+	"crypto/tls"
 	"github.com/containerd/containerd/services/streaming/remotecommand/httpstream"
 	restclient "github.com/containerd/containerd/services/streaming/remotecommand/rest"
 	"github.com/containerd/containerd/services/streaming/remotecommand/transport"
@@ -8,8 +10,11 @@ import (
 	"io"
 	"k8s.io/apimachinery/pkg/util/remotecommand"
 	"k8s.io/klog/v2"
+	"log"
+	"net"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // StreamOptions holds information pertaining to the current streaming session:
@@ -87,6 +92,46 @@ func NewWebSocketExecutorForProtocols(transport http.RoundTripper, upgrader tran
 // Stream opens a protocol streamer to the server and streams until a client closes
 // the connection or the server disconnects.
 func (e *streamExecutor) Stream(options StreamOptions) error {
+	dialer := gwebsocket.Dialer{
+		NetDialContext: func(ctx contextpkg.Context, network, addr string) (net.Conn, error) {
+			parts := strings.SplitN(e.address, "://", 2)
+			conn, err := tls.Dial(parts[0], parts[1], &tls.Config{})
+			return conn, err
+		},
+	}
+
+	c, _, err := dialer.Dial(e.url.String(), nil)
+	if err != nil {
+		klog.V(2).Infof("The protocol is %+v", err)
+	}
+
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for {
+			_, message, err := c.ReadMessage()
+			if err != nil {
+				log.Println("read:", err)
+				return
+			}
+			log.Printf("recv: %s", message)
+		}
+	}()
+
+	go func() {
+		defer close(done)
+		size := 32 * 1024
+		buf := make([]byte, size)
+		for {
+			nr, err := options.Stdin.Read(buf)
+			if err != nil {
+				log.Println("read:", err)
+				return
+			}
+			log.Printf("recv: %v", nr)
+		}
+	}()
+
 	// Leverage the existing rest tools to get a connection with the correct
 	// TLS and headers
 	req, err := http.NewRequest(httpstream.HeaderUpgrade, e.url.String(), nil)
