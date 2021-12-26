@@ -393,6 +393,10 @@ func (p *streamProtocolV4) pullFromWebSocket(conn *websocket.Conn, wg *sync.Wait
 		conn.SetPongHandler(func(string) error { conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 		buffer := make([]byte, 1024)
 		for {
+			err := conn.SetReadDeadline(time.Now().Add(1 * time.Hour))
+			if err != nil {
+				runtime.HandleError(err)
+			}
 			messageType, message, err := conn.ReadMessage()
 
 			if messageType > 0 {
