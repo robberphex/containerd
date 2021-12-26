@@ -101,9 +101,26 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 		},
 	}
 
-	c, _, err := dialer.Dial(e.url.String(), nil)
+	c, resp, err := dialer.Dial(e.url.String(), nil)
 	if err != nil {
 		return err
+	}
+	protocol := resp.Header.Get(transport.SecWebsocketProptocol)
+	klog.V(4).Infof("The protocol is  %s", protocol)
+
+	var streamer streamProtocolHandler
+	switch protocol {
+	case v4BinaryWebsocketProtocol:
+		streamer = newBinaryV4(options)
+	case v4Base64WebsocketProtocol:
+		streamer = newBase64V4(options)
+	case preV4Base64WebsocketProtocol:
+		streamer = newPreV4Base64Protocol(options)
+	case "":
+		klog.V(4).Infof("The server did not negotiate a streaming protocol version. Falling back to %s", remotecommand.StreamProtocolV1Name)
+		fallthrough
+	case preV4BinaryWebsocketProtocol:
+		streamer = newPreV4BinaryProtocol(options)
 	}
 
 	done := make(chan struct{})
@@ -155,8 +172,6 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 	if !ok {
 		panic("Connection is not a websocket connection")
 	}
-
-	var streamer streamProtocolHandler
 
 	klog.V(4).Infof("The protocol is  %s", protocol)
 
