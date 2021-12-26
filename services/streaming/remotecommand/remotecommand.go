@@ -2,7 +2,6 @@ package remotecommand
 
 import (
 	contextpkg "context"
-	"crypto/tls"
 	"github.com/containerd/containerd/services/streaming/remotecommand/httpstream"
 	restclient "github.com/containerd/containerd/services/streaming/remotecommand/rest"
 	"github.com/containerd/containerd/services/streaming/remotecommand/transport"
@@ -95,14 +94,15 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 	dialer := gwebsocket.Dialer{
 		NetDialContext: func(ctx contextpkg.Context, network, addr string) (net.Conn, error) {
 			parts := strings.SplitN(e.address, "://", 2)
-			conn, err := tls.Dial(parts[0], parts[1], &tls.Config{})
+			// todo tls dial
+			conn, err := net.Dial(parts[0], parts[1])
 			return conn, err
 		},
 	}
 
 	c, _, err := dialer.Dial(e.url.String(), nil)
 	if err != nil {
-		klog.V(2).Infof("The protocol is %+v", err)
+		return err
 	}
 
 	done := make(chan struct{})
