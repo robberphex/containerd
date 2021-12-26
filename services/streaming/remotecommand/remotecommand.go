@@ -40,6 +40,7 @@ type streamExecutor struct {
 	wsRoundTripper httpstream.RoundTripper
 
 	url       *url.URL
+	address   string
 	protocols []string
 }
 
@@ -49,27 +50,23 @@ type streamProtocolHandler interface {
 
 // NewWebSocketExecutor creates a new websocket connection to the URL specified with
 // the rest client's TLS configuration and headers
-func NewWebSocketExecutor(config *restclient.Config, url *url.URL) (Executor, error) {
-
-	if url.Scheme == "https" {
-		url.Scheme = "wss"
-	} else if url.Scheme == "http" {
-		url.Scheme = "ws"
-	}
+func NewWebSocketExecutor(config *restclient.Config, url *url.URL, address string) (Executor, error) {
+	url.Scheme = "ws"
 
 	wrapper, upgradeRoundTripper, err := transport.RoundTripperFor(config)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewWebSocketExecutorForTransports(wrapper, upgradeRoundTripper, url)
+	return NewWebSocketExecutorForTransports(wrapper, upgradeRoundTripper, url, address)
 }
 
 // NewWebSocketExecutorForTransports connects to the provided server using the given transport,
 // upgrades the response using the given upgrader to multiplexed bidirectional streams.
-func NewWebSocketExecutorForTransports(transport http.RoundTripper, upgrader transport.Upgrader, url *url.URL) (Executor, error) {
+func NewWebSocketExecutorForTransports(transport http.RoundTripper, upgrader transport.Upgrader, url *url.URL, address string) (Executor, error) {
 	return NewWebSocketExecutorForProtocols(
 		transport, upgrader, url,
+		address,
 		v4BinaryWebsocketProtocol,
 	)
 }
@@ -77,11 +74,12 @@ func NewWebSocketExecutorForTransports(transport http.RoundTripper, upgrader tra
 // NewWebSocketExecutorForProtocols connects to the provided server and upgrades the connection to
 // multiplexed bidirectional streams using only the provided protocols. Exposed for testing, most
 // callers should use NewWebSocketExecutor or NewWebSocketExecutorForTransports.
-func NewWebSocketExecutorForProtocols(transport http.RoundTripper, upgrader transport.Upgrader, url *url.URL, protocols ...string) (Executor, error) {
+func NewWebSocketExecutorForProtocols(transport http.RoundTripper, upgrader transport.Upgrader, url *url.URL, address string, protocols ...string) (Executor, error) {
 	return &streamExecutor{
 		upgrader:  upgrader,
 		transport: transport,
 		url:       url,
+		address:   address,
 		protocols: protocols,
 	}, nil
 }

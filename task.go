@@ -178,6 +178,8 @@ type Task interface {
 	Metrics(context.Context) (*types.Metric, error)
 	// Spec returns the current OCI specification for the task
 	Spec(context.Context) (*oci.Spec, error)
+
+	LogUrl(ctx context.Context) string
 }
 
 var _ = (Task)(&task{})
@@ -593,6 +595,10 @@ func (t *task) Metrics(ctx context.Context) (*types.Metric, error) {
 	}
 
 	return response.Metrics[0], nil
+}
+
+func (t *task) LogUrl(ctx context.Context) string {
+	return t.url
 }
 
 func (t *task) checkpointTask(ctx context.Context, index *v1.Index, request *tasks.CheckpointTaskRequest) error {
