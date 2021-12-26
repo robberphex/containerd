@@ -404,15 +404,15 @@ func (p *streamProtocolV4) pullFromWebSocket(conn *websocket.Conn, wg *sync.Wait
 					if len(message) > 0 {
 						switch message[0] {
 						case StreamStdOut:
-							if _, err := p.remoteStdoutOut.Write(message[1:]); err != nil {
+							if _, err := p.remoteStdoutOut.Write(message[0:]); err != nil {
 								runtime.HandleError(err)
 							}
 						case StreamStdErr:
-							if _, err := p.remoteStderrOut.Write(message[1:]); err != nil {
+							if _, err := p.remoteStderrOut.Write(message[0:]); err != nil {
 								runtime.HandleError(err)
 							}
 						case StreamErr:
-							if _, err := p.errorStreamOut.Write(message[1:]); err != nil {
+							if _, err := p.errorStreamOut.Write(message[0:]); err != nil {
 								runtime.HandleError(err)
 							}
 						}
@@ -427,15 +427,15 @@ func (p *streamProtocolV4) pullFromWebSocket(conn *websocket.Conn, wg *sync.Wait
 						if numBytes > 0 {
 							switch message[0] {
 							case Base64StreamStdOut:
-								if _, err := p.remoteStdoutOut.Write(buffer[1:numBytes]); err != nil {
+								if _, err := p.remoteStdoutOut.Write(buffer[0:numBytes]); err != nil {
 									runtime.HandleError(err)
 								}
 							case Base64StreamStdErr:
-								if _, err := p.remoteStderrOut.Write(buffer[1:numBytes]); err != nil {
+								if _, err := p.remoteStderrOut.Write(buffer[0:numBytes]); err != nil {
 									runtime.HandleError(err)
 								}
 							case Base64StreamErr:
-								if _, err := p.errorStreamOut.Write(buffer[1:numBytes]); err != nil {
+								if _, err := p.errorStreamOut.Write(buffer[0:numBytes]); err != nil {
 									runtime.HandleError(err)
 								}
 							}
