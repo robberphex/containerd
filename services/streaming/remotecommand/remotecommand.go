@@ -9,12 +9,10 @@ import (
 	"io"
 	"k8s.io/apimachinery/pkg/util/remotecommand"
 	"k8s.io/klog/v2"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
 
 // StreamOptions holds information pertaining to the current streaming session:
@@ -110,7 +108,7 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 			preV4Base64WebsocketProtocol,
 		},
 	}
-	c, resp, err := dialer.Dial(e.url.String(), headers)
+	conn, resp, err := dialer.Dial(e.url.String(), headers)
 	if err != nil {
 		return err
 	}
@@ -132,72 +130,5 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 		streamer = newPreV4BinaryProtocol(options)
 	}
 
-	done := make(chan struct{})
-	go func() {
-		defer close(done)
-		for {
-			_, message, err := c.ReadMessage()
-			if err != nil {
-				log.Println("read:", err)
-				return
-			}
-			log.Printf("recv: %s", message)
-		}
-	}()
-
-	go func() {
-		defer close(done)
-		size := 32 * 1024
-		buf := make([]byte, size)
-		for {
-			nr, err := options.Stdin.Read(buf)
-			if err != nil {
-				log.Println("read:", err)
-				return
-			}
-			log.Printf("recv: %v", nr)
-		}
-	}()
-
-	time.Sleep(time.Hour)
-
-	// Leverage the existing rest tools to get a connection with the correct
-	// TLS and headers
-	req, err := http.NewRequest(httpstream.HeaderUpgrade, e.url.String(), nil)
-
-	con, protocol, err := transport.Negotiate(
-		e.upgrader,
-		&http.Client{Transport: e.transport},
-		req,
-		e.protocols...,
-	)
-	if err != nil {
-		return err
-	}
-
-	// cast the connection to a websocket to get the underlying connection
-	conn, ok := con.(*httpstream.WsConnection)
-
-	if !ok {
-		panic("Connection is not a websocket connection")
-	}
-
-	klog.V(4).Infof("The protocol is  %s", protocol)
-
-	switch protocol {
-	case v4BinaryWebsocketProtocol:
-		streamer = newBinaryV4(options)
-	case v4Base64WebsocketProtocol:
-		streamer = newBase64V4(options)
-	case preV4Base64WebsocketProtocol:
-		streamer = newPreV4Base64Protocol(options)
-	case "":
-		klog.V(4).Infof("The server did not negotiate a streaming protocol version. Falling back to %s", remotecommand.StreamProtocolV1Name)
-		fallthrough
-	case preV4BinaryWebsocketProtocol:
-		streamer = newPreV4BinaryProtocol(options)
-	}
-
-	return streamer.stream(conn.Conn)
-
+	return streamer.stream(conn)
 }
