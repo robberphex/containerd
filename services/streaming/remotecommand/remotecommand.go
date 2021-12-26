@@ -101,11 +101,20 @@ func (e *streamExecutor) Stream(options StreamOptions) error {
 		},
 	}
 
-	c, resp, err := dialer.Dial(e.url.String(), nil)
+	headers := http.Header{
+		transport.SecWebsocketProtocol: []string{
+			// todo debug, 后续应该优先使用binary协议
+			v4Base64WebsocketProtocol,
+			v4BinaryWebsocketProtocol,
+			preV4BinaryWebsocketProtocol,
+			preV4Base64WebsocketProtocol,
+		},
+	}
+	c, resp, err := dialer.Dial(e.url.String(), headers)
 	if err != nil {
 		return err
 	}
-	protocol := resp.Header.Get(transport.SecWebsocketProptocol)
+	protocol := resp.Header.Get(transport.SecWebsocketProtocol)
 	klog.V(4).Infof("The protocol is  %s", protocol)
 
 	var streamer streamProtocolHandler

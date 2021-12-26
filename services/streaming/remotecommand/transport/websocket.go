@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	// SecWebsocketProptocol is the response header from the API server
+	// SecWebsocketProtocol is the response header from the API server
 	// that tells us which exec protocol to use
-	SecWebsocketProptocol = "Sec-Websocket-Protocol"
+	SecWebsocketProtocol = "Sec-Websocket-Protocol"
 )
 
 // Upgrader validates a response from the server after a WebSocket upgrade.
@@ -60,5 +60,5 @@ func Negotiate(upgrader Upgrader, client *http.Client, req *http.Request, protoc
 	if err != nil {
 		return nil, "", err
 	}
-	return conn, resp.Header.Get(SecWebsocketProptocol), nil
+	return conn, resp.Header.Get(SecWebsocketProtocol), nil
 }
