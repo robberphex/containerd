@@ -52,10 +52,11 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
-			return &local{
+			l := &local{
 				db:        m.(*metadata.DB),
 				publisher: ep.(events.Publisher),
-			}, nil
+			}
+			return l, nil
 		},
 	})
 }

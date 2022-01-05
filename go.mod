@@ -20,6 +20,7 @@ require (
 	github.com/containerd/ttrpc v1.1.0
 	github.com/containerd/typeurl v1.0.2
 	github.com/containerd/zfs v1.0.0
+	github.com/containernetworking/cni v1.0.1
 	github.com/containernetworking/plugins v1.0.1
 	github.com/coreos/go-systemd/v22 v22.3.2
 	github.com/davecgh/go-spew v1.1.1
@@ -27,7 +28,7 @@ require (
 	github.com/docker/go-metrics v0.0.1
 	github.com/docker/go-units v0.4.0
 	github.com/emicklei/go-restful v2.9.5+incompatible
-	github.com/fsnotify/fsnotify v1.4.9
+	github.com/fsnotify/fsnotify v1.5.1
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/gogo/googleapis v1.4.0
 	github.com/gogo/protobuf v1.3.2
@@ -36,7 +37,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/hashicorp/go-multierror v1.0.0
+	github.com/hashicorp/go-multierror v1.1.0
 	github.com/imdario/mergo v0.3.12
 	github.com/jonboulle/clockwork v0.2.2
 	github.com/klauspost/compress v1.11.13
@@ -49,7 +50,7 @@ require (
 	github.com/opencontainers/runc v1.0.3
 	github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417
 	github.com/opencontainers/selinux v1.8.2
-	github.com/pelletier/go-toml v1.9.3
+	github.com/pelletier/go-toml v1.9.4
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/satori/go.uuid v1.2.0 // indirect
@@ -67,8 +68,6 @@ require (
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
-	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
 	google.golang.org/grpc v1.43.0
 	google.golang.org/protobuf v1.27.1
 	gotest.tools/v3 v3.0.3
@@ -89,6 +88,9 @@ replace (
 	github.com/containerd/containerd => ./.empty-mod/
 	// Use the relative local source of the github.com/containerd/containerd/api to build
 	github.com/containerd/containerd/api => ./api
+
+	github.com/containernetworking/cni => github.com/robberphex/cni v1.0.2-0.20220105091853-5620c4924bee // for-remote
+
 	github.com/gogo/googleapis => github.com/gogo/googleapis v1.3.2
 	// urfave/cli must be <= v1.22.1 due to a regression: https://github.com/urfave/cli/issues/1092
 	github.com/urfave/cli => github.com/urfave/cli v1.22.1

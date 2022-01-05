@@ -29,6 +29,8 @@ const (
 	TasksService = "tasks-service"
 	// NamespacesService is id of namespaces service.
 	NamespacesService = "namespaces-service"
+	// NamespacesService is id of namespaces service.
+	CNIService = "cni-service"
 	// LeasesService is id of leases service.
 	LeasesService = "leases-service"
 	// DiffService is id of diff service.
