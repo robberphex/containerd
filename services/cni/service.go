@@ -2,8 +2,11 @@ package cni
 
 import (
 	"context"
+	"github.com/containerd/containerd/pkg/netns"
+	gocni "github.com/containerd/go-cni"
 	"github.com/containernetworking/cni/libcni"
-	"github.com/containernetworking/cni/pkg/types/v2"
+	cniv1 "github.com/containernetworking/cni/pkg/types/v1"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"os"
 	"sort"
@@ -12,7 +15,7 @@ import (
 
 // grpcServices are all the grpc services provided by cri containerd.
 type grpcServices interface {
-	v2.CNIServer
+	cniv1.CNIServer
 }
 
 // CNIService is the interface implement CRI remote service server.
@@ -23,18 +26,20 @@ type CNIService interface {
 
 // cniService implements CNIService.
 type cniService struct {
-	v2.UnimplementedCNIServer
+	cniv1.UnimplementedCNIServer
 
 	NetconfPath string
+	NetNSDir    string
+	netPlugin   gocni.CNI
 }
 
 func (c cniService) Register(server *grpc.Server) error {
-	v2.RegisterCNIServer(server, c)
+	cniv1.RegisterCNIServer(server, c)
 	return nil
 }
 
-func (c cniService) ListNetworkConfig(ctx context.Context, request *v2.ListNetworkConfigRequest) (*v2.ListNetworkConfigReply, error) {
-	listReply := &v2.ListNetworkConfigReply{}
+func (c cniService) ListNetworkConfig(ctx context.Context, request *cniv1.ListNetworkConfigRequest) (*cniv1.ListNetworkConfigReply, error) {
+	listReply := &cniv1.ListNetworkConfigReply{}
 	if _, err := os.Stat(c.NetconfPath); err != nil {
 		if os.IsNotExist(err) {
 			return listReply, nil
@@ -53,9 +58,9 @@ func (c cniService) ListNetworkConfig(ctx context.Context, request *v2.ListNetwo
 			if err != nil {
 				return nil, err
 			}
-			listReply.Network = append(listReply.Network, &v2.ListNetworkConfigReply_NetworkConfigNameAndType{
+			listReply.Network = append(listReply.Network, &cniv1.ListNetworkConfigReply_NetworkConfigNameAndType{
 				Name:       lcl.Name,
-				Type:       v2.ListNetworkConfigReply_NetworkConfigNameAndType_CONFIG,
+				Type:       cniv1.ListNetworkConfigReply_NetworkConfigNameAndType_CONFIG,
 				ConfigPath: fileName,
 			})
 		} else {
@@ -63,9 +68,9 @@ func (c cniService) ListNetworkConfig(ctx context.Context, request *v2.ListNetwo
 			if err != nil {
 				return nil, err
 			}
-			listReply.Network = append(listReply.Network, &v2.ListNetworkConfigReply_NetworkConfigNameAndType{
+			listReply.Network = append(listReply.Network, &cniv1.ListNetworkConfigReply_NetworkConfigNameAndType{
 				Name:       lc.Network.Name,
-				Type:       v2.ListNetworkConfigReply_NetworkConfigNameAndType_CONFIG,
+				Type:       cniv1.ListNetworkConfigReply_NetworkConfigNameAndType_CONFIG,
 				ConfigPath: fileName,
 			})
 			//lcl, err = libcni.ConfListFromConf(lc)
@@ -76,6 +81,41 @@ func (c cniService) ListNetworkConfig(ctx context.Context, request *v2.ListNetwo
 	}
 
 	return listReply, nil
+}
+
+func (c cniService) AddNetworkList(ctx context.Context, request *cniv1.AddNetworkListRequest) (*cniv1.AddNetworkListReply, error) {
+	err := c.netPlugin.Status()
+	if err != nil {
+		return nil, err
+	}
+	var netw *gocni.ConfNetwork
+	for _, network := range c.netPlugin.GetConfig().Networks {
+		if network.Config.Name == request.GetName() {
+			netw = network
+		}
+	}
+	if netw == nil {
+		return nil, errors.New("not found ")
+	}
+
+	netPath := request.GetRuntimeConf().GetNetNS()
+	if netPath == "" {
+		var netnsMountDir = "/var/run/netns"
+		netNS, err := netns.NewNetNS(netnsMountDir)
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to create network namespace for sandbox %q", request.GetRuntimeConf().GetContainerID())
+		}
+		netPath = netNS.GetPath()
+	}
+	res, err := c.netPlugin.Setup(ctx, "id", netPath)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Setup Network error")
+	}
+	_ = res
+
+	reply := &cniv1.AddNetworkListReply{}
+	reply.NetNS = netPath
+	return reply, nil
 }
 
 var _ CNIService = &cniService{}

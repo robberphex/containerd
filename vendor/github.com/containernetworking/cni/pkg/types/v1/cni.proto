@@ -14,16 +14,15 @@
 
 syntax = "proto3";
 
-package cni.v2;
+package cni.v1;
 
 import "google/protobuf/any.proto";
 
-option go_package = "github.com/containernetworking/cni/types/v2";
+option go_package = "github.com/containernetworking/cni/types/v1";
 
 service CNI {
   rpc ListNetworkConfig(ListNetworkConfigRequest) returns (ListNetworkConfigReply);
 
-  rpc ListNetworkList(ListNetworkListRequest) returns (ListNetworkListReply);
   rpc AddNetworkList(AddNetworkListRequest)returns (AddNetworkListReply);
   rpc CheckNetworkList(CheckNetworkListRequest) returns (CheckNetworkListReply);
   rpc DelNetworkList(DelNetworkListRequest) returns (DelNetworkListReply);
@@ -103,19 +102,13 @@ message CheckNetworkListReply{
 }
 
 message AddNetworkListRequest{
-  NetworkConfigList networkConfigList = 1;
+  string name = 1;
   RuntimeConf runtimeConf = 2;
 }
 
 message AddNetworkListReply{
   Result result = 1;
-}
-
-message ListNetworkListRequest {
-}
-
-message ListNetworkListReply {
-  repeated NetworkConfigList networkConfigList = 1;
+  string netNS = 2;
 }
 
 message NetworkConfigList {

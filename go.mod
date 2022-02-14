@@ -68,7 +68,7 @@ require (
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
-	google.golang.org/grpc v1.43.0
+	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 	gotest.tools/v3 v3.0.3
 	k8s.io/api v0.22.0
@@ -89,7 +89,7 @@ replace (
 	// Use the relative local source of the github.com/containerd/containerd/api to build
 	github.com/containerd/containerd/api => ./api
 
-	github.com/containernetworking/cni => github.com/robberphex/cni v1.0.2-0.20220105091853-5620c4924bee // for-remote
+	github.com/containernetworking/cni => github.com/robberphex/cni v1.0.2-0.20220210123735-f678c7d6d923 // for-remote
 
 	github.com/gogo/googleapis => github.com/gogo/googleapis v1.3.2
 	// urfave/cli must be <= v1.22.1 due to a regression: https://github.com/urfave/cli/issues/1092
