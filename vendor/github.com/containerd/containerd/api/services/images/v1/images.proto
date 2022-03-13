@@ -55,6 +55,16 @@ service Images {
 
 	// Delete deletes the image by name.
 	rpc Delete(DeleteImageRequest) returns (google.protobuf.Empty);
+
+	rpc Import(ImportImageRequest) returns (ImportImageResponse);
+}
+
+message ImportImageRequest {
+	string path = 1;
+}
+
+message ImportImageResponse {
+	Image image = 1 [(gogoproto.nullable) = false];
 }
 
 message Image {

@@ -2086,6 +2086,30 @@ file {
   dependency: "google/protobuf/timestamp.proto"
   dependency: "github.com/containerd/containerd/api/types/descriptor.proto"
   message_type {
+    name: "ImportImageRequest"
+    field {
+      name: "path"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "path"
+    }
+  }
+  message_type {
+    name: "ImportImageResponse"
+    field {
+      name: "image"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_MESSAGE
+      type_name: ".containerd.services.images.v1.Image"
+      options {
+        65001: 0
+      }
+      json_name: "image"
+    }
+  }
+  message_type {
     name: "Image"
     field {
       name: "name"
@@ -2310,6 +2334,11 @@ file {
       name: "Delete"
       input_type: ".containerd.services.images.v1.DeleteImageRequest"
       output_type: ".google.protobuf.Empty"
+    }
+    method {
+      name: "Import"
+      input_type: ".containerd.services.images.v1.ImportImageRequest"
+      output_type: ".containerd.services.images.v1.ImportImageResponse"
     }
   }
   options {
