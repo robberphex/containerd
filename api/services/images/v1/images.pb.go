@@ -34,24 +34,24 @@ var _ = time.Kitchen
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type ImportImageRequest struct {
-	Path                 string   `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+type ImportImageByContentRequest struct {
+	Content              []byte   `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ImportImageRequest) Reset()      { *m = ImportImageRequest{} }
-func (*ImportImageRequest) ProtoMessage() {}
-func (*ImportImageRequest) Descriptor() ([]byte, []int) {
+func (m *ImportImageByContentRequest) Reset()      { *m = ImportImageByContentRequest{} }
+func (*ImportImageByContentRequest) ProtoMessage() {}
+func (*ImportImageByContentRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8666fa071128ae5f, []int{0}
 }
-func (m *ImportImageRequest) XXX_Unmarshal(b []byte) error {
+func (m *ImportImageByContentRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ImportImageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ImportImageByContentRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ImportImageRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ImportImageByContentRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -61,36 +61,36 @@ func (m *ImportImageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *ImportImageRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ImportImageRequest.Merge(m, src)
+func (m *ImportImageByContentRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImportImageByContentRequest.Merge(m, src)
 }
-func (m *ImportImageRequest) XXX_Size() int {
+func (m *ImportImageByContentRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *ImportImageRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ImportImageRequest.DiscardUnknown(m)
+func (m *ImportImageByContentRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImportImageByContentRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ImportImageRequest proto.InternalMessageInfo
+var xxx_messageInfo_ImportImageByContentRequest proto.InternalMessageInfo
 
-type ImportImageResponse struct {
+type ImportImageByContentResponse struct {
 	Image                Image    `protobuf:"bytes,1,opt,name=image,proto3" json:"image"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ImportImageResponse) Reset()      { *m = ImportImageResponse{} }
-func (*ImportImageResponse) ProtoMessage() {}
-func (*ImportImageResponse) Descriptor() ([]byte, []int) {
+func (m *ImportImageByContentResponse) Reset()      { *m = ImportImageByContentResponse{} }
+func (*ImportImageByContentResponse) ProtoMessage() {}
+func (*ImportImageByContentResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8666fa071128ae5f, []int{1}
 }
-func (m *ImportImageResponse) XXX_Unmarshal(b []byte) error {
+func (m *ImportImageByContentResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ImportImageResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ImportImageByContentResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ImportImageResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ImportImageByContentResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -100,17 +100,95 @@ func (m *ImportImageResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *ImportImageResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ImportImageResponse.Merge(m, src)
+func (m *ImportImageByContentResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImportImageByContentResponse.Merge(m, src)
 }
-func (m *ImportImageResponse) XXX_Size() int {
+func (m *ImportImageByContentResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *ImportImageResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ImportImageResponse.DiscardUnknown(m)
+func (m *ImportImageByContentResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImportImageByContentResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ImportImageResponse proto.InternalMessageInfo
+var xxx_messageInfo_ImportImageByContentResponse proto.InternalMessageInfo
+
+type ImportImageByPathRequest struct {
+	Path                 string   `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImportImageByPathRequest) Reset()      { *m = ImportImageByPathRequest{} }
+func (*ImportImageByPathRequest) ProtoMessage() {}
+func (*ImportImageByPathRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8666fa071128ae5f, []int{2}
+}
+func (m *ImportImageByPathRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ImportImageByPathRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ImportImageByPathRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ImportImageByPathRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImportImageByPathRequest.Merge(m, src)
+}
+func (m *ImportImageByPathRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ImportImageByPathRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImportImageByPathRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImportImageByPathRequest proto.InternalMessageInfo
+
+type ImportImageByPathResponse struct {
+	Image                Image    `protobuf:"bytes,1,opt,name=image,proto3" json:"image"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ImportImageByPathResponse) Reset()      { *m = ImportImageByPathResponse{} }
+func (*ImportImageByPathResponse) ProtoMessage() {}
+func (*ImportImageByPathResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8666fa071128ae5f, []int{3}
+}
+func (m *ImportImageByPathResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ImportImageByPathResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ImportImageByPathResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ImportImageByPathResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImportImageByPathResponse.Merge(m, src)
+}
+func (m *ImportImageByPathResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ImportImageByPathResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ImportImageByPathResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ImportImageByPathResponse proto.InternalMessageInfo
 
 type Image struct {
 	// Name provides a unique name for the image.
@@ -137,7 +215,7 @@ type Image struct {
 func (m *Image) Reset()      { *m = Image{} }
 func (*Image) ProtoMessage() {}
 func (*Image) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{2}
+	return fileDescriptor_8666fa071128ae5f, []int{4}
 }
 func (m *Image) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -176,7 +254,7 @@ type GetImageRequest struct {
 func (m *GetImageRequest) Reset()      { *m = GetImageRequest{} }
 func (*GetImageRequest) ProtoMessage() {}
 func (*GetImageRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{3}
+	return fileDescriptor_8666fa071128ae5f, []int{5}
 }
 func (m *GetImageRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -215,7 +293,7 @@ type GetImageResponse struct {
 func (m *GetImageResponse) Reset()      { *m = GetImageResponse{} }
 func (*GetImageResponse) ProtoMessage() {}
 func (*GetImageResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{4}
+	return fileDescriptor_8666fa071128ae5f, []int{6}
 }
 func (m *GetImageResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -254,7 +332,7 @@ type CreateImageRequest struct {
 func (m *CreateImageRequest) Reset()      { *m = CreateImageRequest{} }
 func (*CreateImageRequest) ProtoMessage() {}
 func (*CreateImageRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{5}
+	return fileDescriptor_8666fa071128ae5f, []int{7}
 }
 func (m *CreateImageRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -293,7 +371,7 @@ type CreateImageResponse struct {
 func (m *CreateImageResponse) Reset()      { *m = CreateImageResponse{} }
 func (*CreateImageResponse) ProtoMessage() {}
 func (*CreateImageResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{6}
+	return fileDescriptor_8666fa071128ae5f, []int{8}
 }
 func (m *CreateImageResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -338,7 +416,7 @@ type UpdateImageRequest struct {
 func (m *UpdateImageRequest) Reset()      { *m = UpdateImageRequest{} }
 func (*UpdateImageRequest) ProtoMessage() {}
 func (*UpdateImageRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{7}
+	return fileDescriptor_8666fa071128ae5f, []int{9}
 }
 func (m *UpdateImageRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -377,7 +455,7 @@ type UpdateImageResponse struct {
 func (m *UpdateImageResponse) Reset()      { *m = UpdateImageResponse{} }
 func (*UpdateImageResponse) ProtoMessage() {}
 func (*UpdateImageResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{8}
+	return fileDescriptor_8666fa071128ae5f, []int{10}
 }
 func (m *UpdateImageResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -426,7 +504,7 @@ type ListImagesRequest struct {
 func (m *ListImagesRequest) Reset()      { *m = ListImagesRequest{} }
 func (*ListImagesRequest) ProtoMessage() {}
 func (*ListImagesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{9}
+	return fileDescriptor_8666fa071128ae5f, []int{11}
 }
 func (m *ListImagesRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -465,7 +543,7 @@ type ListImagesResponse struct {
 func (m *ListImagesResponse) Reset()      { *m = ListImagesResponse{} }
 func (*ListImagesResponse) ProtoMessage() {}
 func (*ListImagesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{10}
+	return fileDescriptor_8666fa071128ae5f, []int{12}
 }
 func (m *ListImagesResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -509,7 +587,7 @@ type DeleteImageRequest struct {
 func (m *DeleteImageRequest) Reset()      { *m = DeleteImageRequest{} }
 func (*DeleteImageRequest) ProtoMessage() {}
 func (*DeleteImageRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8666fa071128ae5f, []int{11}
+	return fileDescriptor_8666fa071128ae5f, []int{13}
 }
 func (m *DeleteImageRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -539,8 +617,10 @@ func (m *DeleteImageRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_DeleteImageRequest proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*ImportImageRequest)(nil), "containerd.services.images.v1.ImportImageRequest")
-	proto.RegisterType((*ImportImageResponse)(nil), "containerd.services.images.v1.ImportImageResponse")
+	proto.RegisterType((*ImportImageByContentRequest)(nil), "containerd.services.images.v1.ImportImageByContentRequest")
+	proto.RegisterType((*ImportImageByContentResponse)(nil), "containerd.services.images.v1.ImportImageByContentResponse")
+	proto.RegisterType((*ImportImageByPathRequest)(nil), "containerd.services.images.v1.ImportImageByPathRequest")
+	proto.RegisterType((*ImportImageByPathResponse)(nil), "containerd.services.images.v1.ImportImageByPathResponse")
 	proto.RegisterType((*Image)(nil), "containerd.services.images.v1.Image")
 	proto.RegisterMapType((map[string]string)(nil), "containerd.services.images.v1.Image.LabelsEntry")
 	proto.RegisterType((*GetImageRequest)(nil), "containerd.services.images.v1.GetImageRequest")
@@ -559,51 +639,56 @@ func init() {
 }
 
 var fileDescriptor_8666fa071128ae5f = []byte{
-	// 698 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x3d, 0x6f, 0xd3, 0x40,
-	0x18, 0x8e, 0xf3, 0xe1, 0xb6, 0x6f, 0x06, 0xca, 0xb5, 0x42, 0x96, 0x81, 0x34, 0xb2, 0x40, 0xca,
-	0x82, 0x4d, 0xc3, 0x02, 0x2d, 0x42, 0x34, 0x6d, 0x29, 0x95, 0x0a, 0x83, 0xf9, 0x68, 0xc5, 0x52,
-	0x5d, 0x92, 0x8b, 0x6b, 0xc5, 0x8e, 0x8d, 0xef, 0x12, 0x29, 0x1b, 0x0b, 0x3b, 0x12, 0x7f, 0xaa,
-	0x23, 0x23, 0x13, 0xd0, 0x0c, 0xfc, 0x0e, 0xe4, 0xbb, 0x33, 0x4d, 0xe2, 0x08, 0x37, 0x25, 0xdb,
-	0xeb, 0xf8, 0x79, 0xde, 0x8f, 0xe7, 0x79, 0xcf, 0x17, 0xd8, 0x73, 0x5c, 0x76, 0xd6, 0x6f, 0x9a,
-	0xad, 0xc0, 0xb7, 0x5a, 0x41, 0x8f, 0x61, 0xb7, 0x47, 0xa2, 0xf6, 0x78, 0x88, 0x43, 0xd7, 0xa2,
-	0x24, 0x1a, 0xb8, 0x2d, 0x42, 0x2d, 0xd7, 0xc7, 0x0e, 0xa1, 0xd6, 0x60, 0x53, 0x46, 0x66, 0x18,
-	0x05, 0x2c, 0x40, 0x77, 0x2f, 0xf1, 0x66, 0x82, 0x35, 0x25, 0x62, 0xb0, 0xa9, 0xaf, 0x3b, 0x81,
-	0x13, 0x70, 0xa4, 0x15, 0x47, 0x82, 0xa4, 0xdf, 0x76, 0x82, 0xc0, 0xf1, 0x88, 0xc5, 0x9f, 0x9a,
-	0xfd, 0x8e, 0x45, 0xfc, 0x90, 0x0d, 0xe5, 0xcb, 0xea, 0xf4, 0xcb, 0x8e, 0x4b, 0xbc, 0xf6, 0xa9,
-	0x8f, 0x69, 0x57, 0x22, 0x36, 0xa6, 0x11, 0xcc, 0xf5, 0x09, 0x65, 0xd8, 0x0f, 0x25, 0x60, 0xfb,
-	0x4a, 0xa3, 0xb1, 0x61, 0x48, 0xa8, 0xd5, 0x26, 0xb4, 0x15, 0xb9, 0x21, 0x0b, 0x22, 0x41, 0x36,
-	0x6a, 0x80, 0x0e, 0xfd, 0x30, 0x88, 0xd8, 0x61, 0x3c, 0x85, 0x4d, 0x3e, 0xf6, 0x09, 0x65, 0x08,
-	0x41, 0x31, 0xc4, 0xec, 0x4c, 0x53, 0xaa, 0x4a, 0x6d, 0xc5, 0xe6, 0xb1, 0x71, 0x0c, 0x6b, 0x13,
-	0x48, 0x1a, 0x06, 0x3d, 0x4a, 0xd0, 0x73, 0x28, 0x71, 0x01, 0x38, 0xb6, 0x5c, 0xbf, 0x67, 0xfe,
-	0x53, 0x22, 0x93, 0x93, 0x1b, 0xc5, 0xf3, 0x1f, 0x1b, 0x39, 0x5b, 0x10, 0x8d, 0xdf, 0x79, 0x28,
-	0xf1, 0x9f, 0xe3, 0xb2, 0x3d, 0xec, 0x93, 0xa4, 0x6c, 0x1c, 0xa3, 0x97, 0xa0, 0x7a, 0xb8, 0x49,
-	0x3c, 0xaa, 0xe5, 0xab, 0x85, 0x5a, 0xb9, 0xfe, 0xf0, 0x2a, 0x05, 0xcc, 0x23, 0x4e, 0xd9, 0xef,
-	0xb1, 0x68, 0x68, 0x4b, 0x3e, 0xda, 0x02, 0x95, 0xe1, 0xc8, 0x21, 0x4c, 0x2b, 0xf0, 0x56, 0xef,
-	0x8c, 0x67, 0xe2, 0xf2, 0x98, 0x7b, 0x7f, 0xe5, 0x91, 0x2d, 0x4a, 0x06, 0xda, 0x05, 0x68, 0x45,
-	0x04, 0x33, 0xd2, 0x3e, 0xc5, 0x4c, 0x5b, 0xe2, 0x7c, 0xdd, 0x14, 0xce, 0x98, 0x89, 0x33, 0xe6,
-	0xdb, 0xc4, 0x99, 0xc6, 0x72, 0xcc, 0xfe, 0xf2, 0x73, 0x43, 0xb1, 0x57, 0x24, 0x6f, 0x87, 0x27,
-	0xe9, 0x87, 0xed, 0x24, 0xc9, 0xf2, 0x3c, 0x49, 0x24, 0x6f, 0x87, 0xe9, 0x4f, 0xa0, 0x3c, 0x36,
-	0x1c, 0x5a, 0x85, 0x42, 0x97, 0x0c, 0xa5, 0x62, 0x71, 0x88, 0xd6, 0xa1, 0x34, 0xc0, 0x5e, 0x9f,
-	0x68, 0x79, 0xfe, 0x9b, 0x78, 0xd8, 0xca, 0x3f, 0x56, 0x8c, 0xfb, 0x70, 0xe3, 0x80, 0xa4, 0x8c,
-	0x9e, 0x56, 0xdc, 0x78, 0x0d, 0xab, 0x97, 0x30, 0xe9, 0xf2, 0xd6, 0x35, 0x5c, 0x4e, 0xfc, 0x7d,
-	0x0f, 0x68, 0x97, 0x6b, 0x30, 0x51, 0xf9, 0xff, 0xf7, 0xe6, 0x18, 0xd6, 0x26, 0xf2, 0x2e, 0x6c,
-	0x21, 0xbf, 0x2a, 0x80, 0xde, 0x71, 0xc1, 0x17, 0xdb, 0x31, 0xda, 0x86, 0xb2, 0x30, 0x92, 0x9f,
-	0x6f, 0x6e, 0xd0, 0xac, 0x0d, 0x78, 0x11, 0x7f, 0x02, 0x5e, 0x61, 0xda, 0xb5, 0xe5, 0xbe, 0xc4,
-	0x71, 0x3c, 0xee, 0x44, 0x53, 0x0b, 0x1b, 0xf7, 0x01, 0xdc, 0x3c, 0x72, 0xa9, 0x30, 0x9c, 0x26,
-	0xc3, 0x6a, 0xb0, 0xd4, 0x71, 0x3d, 0x46, 0x22, 0xaa, 0x29, 0xd5, 0x42, 0x6d, 0xc5, 0x4e, 0x1e,
-	0x8d, 0x13, 0x40, 0xe3, 0x70, 0xd9, 0x46, 0x03, 0x54, 0x51, 0x84, 0xc3, 0xe7, 0xeb, 0x43, 0x32,
-	0x8d, 0xa7, 0x80, 0xf6, 0x88, 0x47, 0xa6, 0x64, 0x9f, 0xf5, 0x51, 0x40, 0x50, 0xa4, 0xc3, 0x5e,
-	0x8b, 0x2b, 0xb8, 0x6c, 0xf3, 0xb8, 0xfe, 0xb9, 0x04, 0xaa, 0x68, 0x0a, 0x75, 0xa0, 0x70, 0x40,
-	0x18, 0x32, 0x33, 0x7a, 0x98, 0x3a, 0x0c, 0xba, 0x75, 0x65, 0xbc, 0x1c, 0xba, 0x0b, 0xc5, 0x58,
-	0x0a, 0x94, 0xf5, 0x4d, 0x4a, 0xc9, 0xab, 0x6f, 0xce, 0xc1, 0x90, 0xc5, 0x02, 0x50, 0xc5, 0xba,
-	0xa3, 0x2c, 0x72, 0xfa, 0xb4, 0xe9, 0xf5, 0x79, 0x28, 0x97, 0x05, 0xc5, 0xc2, 0x65, 0x16, 0x4c,
-	0x1f, 0x96, 0xcc, 0x82, 0xb3, 0x56, 0xf9, 0x0d, 0xa8, 0xc2, 0xff, 0xcc, 0x82, 0xe9, 0x35, 0xd1,
-	0x6f, 0xa5, 0x8e, 0xd1, 0x7e, 0x7c, 0xcd, 0xc6, 0x53, 0x88, 0x6b, 0x2b, 0x33, 0x69, 0xfa, 0x1e,
-	0xcc, 0x9c, 0x62, 0xc6, 0x85, 0xd8, 0x38, 0x39, 0xbf, 0xa8, 0xe4, 0xbe, 0x5f, 0x54, 0x72, 0x9f,
-	0x46, 0x15, 0xe5, 0x7c, 0x54, 0x51, 0xbe, 0x8d, 0x2a, 0xca, 0xaf, 0x51, 0x45, 0xf9, 0xf0, 0xec,
-	0x9a, 0xff, 0x41, 0xb6, 0x45, 0x74, 0x92, 0x6b, 0xaa, 0x7c, 0xb8, 0x47, 0x7f, 0x02, 0x00, 0x00,
-	0xff, 0xff, 0xcd, 0x75, 0xcf, 0x6b, 0xce, 0x08, 0x00, 0x00,
+	// 771 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4d, 0x6f, 0xd3, 0x4c,
+	0x10, 0x8e, 0x93, 0xd4, 0x6d, 0x27, 0x95, 0xda, 0x77, 0xdf, 0xea, 0x95, 0x5f, 0xb7, 0xa4, 0x91,
+	0x05, 0x52, 0x2e, 0xd8, 0x34, 0x1c, 0x5a, 0x12, 0x84, 0x68, 0xda, 0x52, 0x2a, 0x15, 0x84, 0xcc,
+	0x57, 0x85, 0x84, 0xca, 0x26, 0xd9, 0xa4, 0x56, 0xe2, 0x0f, 0xbc, 0x9b, 0x48, 0xb9, 0xc1, 0x9d,
+	0x03, 0x12, 0x3f, 0x82, 0xbf, 0xd2, 0x23, 0x47, 0x4e, 0x40, 0x73, 0xe0, 0x77, 0x20, 0xef, 0xae,
+	0x69, 0xbe, 0x44, 0x9a, 0x92, 0xdb, 0xac, 0x3d, 0xcf, 0xcc, 0x33, 0x33, 0xcf, 0x7e, 0xc0, 0x5e,
+	0xc3, 0x61, 0xa7, 0xed, 0x8a, 0x59, 0xf5, 0x5d, 0xab, 0xea, 0x7b, 0x0c, 0x3b, 0x1e, 0x09, 0x6b,
+	0xfd, 0x26, 0x0e, 0x1c, 0x8b, 0x92, 0xb0, 0xe3, 0x54, 0x09, 0xb5, 0x1c, 0x17, 0x37, 0x08, 0xb5,
+	0x3a, 0x9b, 0xd2, 0x32, 0x83, 0xd0, 0x67, 0x3e, 0xba, 0x76, 0xe1, 0x6f, 0xc6, 0xbe, 0xa6, 0xf4,
+	0xe8, 0x6c, 0xea, 0xab, 0x0d, 0xbf, 0xe1, 0x73, 0x4f, 0x2b, 0xb2, 0x04, 0x48, 0x5f, 0x6b, 0xf8,
+	0x7e, 0xa3, 0x45, 0x2c, 0xbe, 0xaa, 0xb4, 0xeb, 0x16, 0x71, 0x03, 0xd6, 0x95, 0x3f, 0x73, 0xc3,
+	0x3f, 0xeb, 0x0e, 0x69, 0xd5, 0x4e, 0x5c, 0x4c, 0x9b, 0xd2, 0x63, 0x63, 0xd8, 0x83, 0x39, 0x2e,
+	0xa1, 0x0c, 0xbb, 0x81, 0x74, 0x28, 0x5d, 0xaa, 0x34, 0xd6, 0x0d, 0x08, 0xb5, 0x6a, 0x84, 0x56,
+	0x43, 0x27, 0x60, 0x7e, 0x28, 0xc0, 0xc6, 0x16, 0xac, 0x1d, 0xba, 0x81, 0x1f, 0xb2, 0xc3, 0xa8,
+	0x8a, 0x72, 0x77, 0xd7, 0xf7, 0x18, 0xf1, 0x98, 0x4d, 0xde, 0xb6, 0x09, 0x65, 0x48, 0x83, 0xf9,
+	0xaa, 0xf8, 0xa2, 0x29, 0x39, 0x25, 0xbf, 0x64, 0xc7, 0x4b, 0xe3, 0x0d, 0xac, 0x8f, 0x07, 0xd2,
+	0xc0, 0xf7, 0x28, 0x41, 0xf7, 0x61, 0x8e, 0x37, 0x86, 0xe3, 0x32, 0x85, 0xeb, 0xe6, 0x1f, 0x5b,
+	0x67, 0x8a, 0x28, 0xe9, 0xb3, 0x6f, 0x1b, 0x09, 0x5b, 0x00, 0x0d, 0x13, 0xb4, 0x81, 0x0c, 0x4f,
+	0x30, 0x3b, 0x8d, 0x79, 0x21, 0x48, 0x07, 0x98, 0x9d, 0xf2, 0xe0, 0x8b, 0x36, 0xb7, 0x8d, 0xd7,
+	0xf0, 0xff, 0x18, 0xff, 0x99, 0xd1, 0xf9, 0x99, 0x84, 0x39, 0xfe, 0x39, 0x4a, 0xee, 0x61, 0x97,
+	0xc4, 0xc9, 0x23, 0x1b, 0x3d, 0x04, 0xb5, 0x85, 0x2b, 0xa4, 0x45, 0xb5, 0x64, 0x2e, 0x95, 0xcf,
+	0x14, 0x6e, 0x5d, 0x26, 0x81, 0x79, 0xc4, 0x21, 0xfb, 0x1e, 0x0b, 0xbb, 0xb6, 0xc4, 0xa3, 0x22,
+	0xa8, 0x0c, 0x87, 0x0d, 0xc2, 0xb4, 0x14, 0xa7, 0xba, 0xde, 0x1f, 0x89, 0x4f, 0xd1, 0xdc, 0xfb,
+	0x3d, 0x45, 0x49, 0x51, 0x22, 0xd0, 0x2e, 0x40, 0x35, 0x24, 0x98, 0x91, 0xda, 0x09, 0x66, 0xda,
+	0x3c, 0xc7, 0xeb, 0xa6, 0x10, 0x90, 0x19, 0x0b, 0xc8, 0x7c, 0x16, 0x0b, 0xa8, 0xbc, 0x10, 0xa1,
+	0x3f, 0x7e, 0xdf, 0x50, 0xec, 0x45, 0x89, 0xdb, 0xe1, 0x41, 0xda, 0x41, 0x2d, 0x0e, 0xb2, 0x30,
+	0x4d, 0x10, 0x89, 0xdb, 0x61, 0xfa, 0x1d, 0xc8, 0xf4, 0x15, 0x87, 0x56, 0x20, 0xd5, 0x24, 0x5d,
+	0xd9, 0xb1, 0xc8, 0x44, 0xab, 0x30, 0xd7, 0xc1, 0xad, 0x36, 0xd1, 0x92, 0xfc, 0x9b, 0x58, 0x14,
+	0x93, 0xdb, 0x8a, 0x71, 0x03, 0x96, 0x0f, 0x88, 0x18, 0x62, 0xdf, 0xb8, 0x87, 0x3b, 0x6e, 0x3c,
+	0x86, 0x95, 0x0b, 0x37, 0x39, 0xe5, 0xe2, 0x15, 0xa6, 0x1c, 0xcf, 0xf7, 0x05, 0xa0, 0x5d, 0xde,
+	0x83, 0x81, 0xcc, 0x7f, 0xaf, 0x9b, 0x97, 0xf0, 0xef, 0x40, 0xdc, 0x99, 0x09, 0xf2, 0x93, 0x02,
+	0xe8, 0x39, 0x6f, 0xf8, 0x6c, 0x19, 0xa3, 0x12, 0x64, 0xc4, 0x20, 0xf9, 0x31, 0xc4, 0x07, 0x34,
+	0x4e, 0x01, 0x0f, 0xa2, 0x93, 0xea, 0x11, 0xa6, 0x4d, 0x5b, 0xea, 0x25, 0xb2, 0xa3, 0x72, 0x07,
+	0x48, 0xcd, 0xac, 0xdc, 0x9b, 0xf0, 0xcf, 0x91, 0x43, 0xc5, 0xc0, 0x69, 0xdf, 0xf9, 0x54, 0x77,
+	0x5a, 0x8c, 0x84, 0x54, 0x53, 0x72, 0xa9, 0xfc, 0xa2, 0x1d, 0x2f, 0x8d, 0x63, 0x40, 0xfd, 0xee,
+	0x92, 0x46, 0x19, 0x54, 0x91, 0x84, 0xbb, 0x4f, 0xc7, 0x43, 0x22, 0x8d, 0xbb, 0x80, 0xf6, 0x48,
+	0x8b, 0x0c, 0xb5, 0x7d, 0xdc, 0xa1, 0x80, 0x20, 0x4d, 0xbb, 0x5e, 0x95, 0x77, 0x70, 0xc1, 0xe6,
+	0x76, 0xe1, 0xb3, 0x0a, 0xaa, 0x20, 0x85, 0xea, 0x90, 0x3a, 0x20, 0x0c, 0x99, 0x13, 0x38, 0x0c,
+	0x6d, 0x06, 0xdd, 0xba, 0xb4, 0xbf, 0x2c, 0xba, 0x09, 0xe9, 0xa8, 0x15, 0x68, 0xd2, 0x99, 0x34,
+	0xd2, 0x5e, 0x7d, 0x73, 0x0a, 0x84, 0x4c, 0xe6, 0x83, 0x2a, 0xe4, 0x8e, 0x26, 0x81, 0x47, 0x77,
+	0x9b, 0x5e, 0x98, 0x06, 0x72, 0x91, 0x50, 0x08, 0x6e, 0x62, 0xc2, 0xd1, 0xcd, 0x32, 0x31, 0xe1,
+	0x38, 0x29, 0x3f, 0x05, 0x55, 0xcc, 0x7f, 0x62, 0xc2, 0x51, 0x99, 0xe8, 0xff, 0x8d, 0x6c, 0xa3,
+	0xfd, 0xe8, 0x35, 0x80, 0xde, 0x2b, 0xb0, 0x24, 0x6e, 0x2f, 0x71, 0x71, 0xa1, 0xad, 0x89, 0xca,
+	0x1c, 0x7f, 0x35, 0xea, 0xdb, 0xd3, 0x03, 0x65, 0x61, 0x1f, 0x14, 0x58, 0x8e, 0x39, 0xc8, 0xeb,
+	0x1c, 0x15, 0xa7, 0x89, 0x36, 0xf8, 0x78, 0xd0, 0x4b, 0x57, 0xc2, 0x0a, 0x32, 0x79, 0xa5, 0x7c,
+	0x7c, 0x76, 0x9e, 0x4d, 0x7c, 0x3d, 0xcf, 0x26, 0xde, 0xf5, 0xb2, 0xca, 0x59, 0x2f, 0xab, 0x7c,
+	0xe9, 0x65, 0x95, 0x1f, 0xbd, 0xac, 0xf2, 0xea, 0xde, 0x15, 0x1f, 0x73, 0x25, 0x61, 0x1d, 0x27,
+	0x2a, 0x2a, 0x6f, 0xff, 0xed, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x13, 0x96, 0x56, 0xf2, 0x17,
+	0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -631,7 +716,8 @@ type ImagesClient interface {
 	Update(ctx context.Context, in *UpdateImageRequest, opts ...grpc.CallOption) (*UpdateImageResponse, error)
 	// Delete deletes the image by name.
 	Delete(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*types1.Empty, error)
-	Import(ctx context.Context, in *ImportImageRequest, opts ...grpc.CallOption) (*ImportImageResponse, error)
+	ImportByPath(ctx context.Context, in *ImportImageByPathRequest, opts ...grpc.CallOption) (*ImportImageByPathResponse, error)
+	ImportByContent(ctx context.Context, opts ...grpc.CallOption) (Images_ImportByContentClient, error)
 }
 
 type imagesClient struct {
@@ -687,13 +773,47 @@ func (c *imagesClient) Delete(ctx context.Context, in *DeleteImageRequest, opts 
 	return out, nil
 }
 
-func (c *imagesClient) Import(ctx context.Context, in *ImportImageRequest, opts ...grpc.CallOption) (*ImportImageResponse, error) {
-	out := new(ImportImageResponse)
-	err := c.cc.Invoke(ctx, "/containerd.services.images.v1.Images/Import", in, out, opts...)
+func (c *imagesClient) ImportByPath(ctx context.Context, in *ImportImageByPathRequest, opts ...grpc.CallOption) (*ImportImageByPathResponse, error) {
+	out := new(ImportImageByPathResponse)
+	err := c.cc.Invoke(ctx, "/containerd.services.images.v1.Images/ImportByPath", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *imagesClient) ImportByContent(ctx context.Context, opts ...grpc.CallOption) (Images_ImportByContentClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Images_serviceDesc.Streams[0], "/containerd.services.images.v1.Images/ImportByContent", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &imagesImportByContentClient{stream}
+	return x, nil
+}
+
+type Images_ImportByContentClient interface {
+	Send(*ImportImageByContentRequest) error
+	CloseAndRecv() (*ImportImageByContentResponse, error)
+	grpc.ClientStream
+}
+
+type imagesImportByContentClient struct {
+	grpc.ClientStream
+}
+
+func (x *imagesImportByContentClient) Send(m *ImportImageByContentRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *imagesImportByContentClient) CloseAndRecv() (*ImportImageByContentResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(ImportImageByContentResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // ImagesServer is the server API for Images service.
@@ -711,7 +831,8 @@ type ImagesServer interface {
 	Update(context.Context, *UpdateImageRequest) (*UpdateImageResponse, error)
 	// Delete deletes the image by name.
 	Delete(context.Context, *DeleteImageRequest) (*types1.Empty, error)
-	Import(context.Context, *ImportImageRequest) (*ImportImageResponse, error)
+	ImportByPath(context.Context, *ImportImageByPathRequest) (*ImportImageByPathResponse, error)
+	ImportByContent(Images_ImportByContentServer) error
 }
 
 // UnimplementedImagesServer can be embedded to have forward compatible implementations.
@@ -733,8 +854,11 @@ func (*UnimplementedImagesServer) Update(ctx context.Context, req *UpdateImageRe
 func (*UnimplementedImagesServer) Delete(ctx context.Context, req *DeleteImageRequest) (*types1.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
-func (*UnimplementedImagesServer) Import(ctx context.Context, req *ImportImageRequest) (*ImportImageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Import not implemented")
+func (*UnimplementedImagesServer) ImportByPath(ctx context.Context, req *ImportImageByPathRequest) (*ImportImageByPathResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImportByPath not implemented")
+}
+func (*UnimplementedImagesServer) ImportByContent(srv Images_ImportByContentServer) error {
+	return status.Errorf(codes.Unimplemented, "method ImportByContent not implemented")
 }
 
 func RegisterImagesServer(s *grpc.Server, srv ImagesServer) {
@@ -831,22 +955,48 @@ func _Images_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Images_Import_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ImportImageRequest)
+func _Images_ImportByPath_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImportImageByPathRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImagesServer).Import(ctx, in)
+		return srv.(ImagesServer).ImportByPath(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/containerd.services.images.v1.Images/Import",
+		FullMethod: "/containerd.services.images.v1.Images/ImportByPath",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImagesServer).Import(ctx, req.(*ImportImageRequest))
+		return srv.(ImagesServer).ImportByPath(ctx, req.(*ImportImageByPathRequest))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _Images_ImportByContent_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ImagesServer).ImportByContent(&imagesImportByContentServer{stream})
+}
+
+type Images_ImportByContentServer interface {
+	SendAndClose(*ImportImageByContentResponse) error
+	Recv() (*ImportImageByContentRequest, error)
+	grpc.ServerStream
+}
+
+type imagesImportByContentServer struct {
+	grpc.ServerStream
+}
+
+func (x *imagesImportByContentServer) SendAndClose(m *ImportImageByContentResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *imagesImportByContentServer) Recv() (*ImportImageByContentRequest, error) {
+	m := new(ImportImageByContentRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 var _Images_serviceDesc = grpc.ServiceDesc{
@@ -874,15 +1024,21 @@ var _Images_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Images_Delete_Handler,
 		},
 		{
-			MethodName: "Import",
-			Handler:    _Images_Import_Handler,
+			MethodName: "ImportByPath",
+			Handler:    _Images_ImportByPath_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "ImportByContent",
+			Handler:       _Images_ImportByContent_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "github.com/containerd/containerd/api/services/images/v1/images.proto",
 }
 
-func (m *ImportImageRequest) Marshal() (dAtA []byte, err error) {
+func (m *ImportImageByContentRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -892,12 +1048,83 @@ func (m *ImportImageRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ImportImageRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *ImportImageByContentRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ImportImageRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ImportImageByContentRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.Content) > 0 {
+		i -= len(m.Content)
+		copy(dAtA[i:], m.Content)
+		i = encodeVarintImages(dAtA, i, uint64(len(m.Content)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ImportImageByContentResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ImportImageByContentResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ImportImageByContentResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	{
+		size, err := m.Image.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintImages(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *ImportImageByPathRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ImportImageByPathRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ImportImageByPathRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -916,7 +1143,7 @@ func (m *ImportImageRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *ImportImageResponse) Marshal() (dAtA []byte, err error) {
+func (m *ImportImageByPathResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -926,12 +1153,12 @@ func (m *ImportImageResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ImportImageResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *ImportImageByPathResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ImportImageResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ImportImageByPathResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -977,20 +1204,20 @@ func (m *Image) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
 	}
-	n2, err2 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.UpdatedAt, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.UpdatedAt):])
-	if err2 != nil {
-		return 0, err2
-	}
-	i -= n2
-	i = encodeVarintImages(dAtA, i, uint64(n2))
-	i--
-	dAtA[i] = 0x42
-	n3, err3 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.CreatedAt, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.CreatedAt):])
+	n3, err3 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.UpdatedAt, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.UpdatedAt):])
 	if err3 != nil {
 		return 0, err3
 	}
 	i -= n3
 	i = encodeVarintImages(dAtA, i, uint64(n3))
+	i--
+	dAtA[i] = 0x42
+	n4, err4 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.CreatedAt, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.CreatedAt):])
+	if err4 != nil {
+		return 0, err4
+	}
+	i -= n4
+	i = encodeVarintImages(dAtA, i, uint64(n4))
 	i--
 	dAtA[i] = 0x3a
 	{
@@ -1397,7 +1624,37 @@ func encodeVarintImages(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *ImportImageRequest) Size() (n int) {
+func (m *ImportImageByContentRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Content)
+	if l > 0 {
+		n += 1 + l + sovImages(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ImportImageByContentResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Image.Size()
+	n += 1 + l + sovImages(uint64(l))
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ImportImageByPathRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1413,7 +1670,7 @@ func (m *ImportImageRequest) Size() (n int) {
 	return n
 }
 
-func (m *ImportImageResponse) Size() (n int) {
+func (m *ImportImageByPathResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1610,22 +1867,44 @@ func sovImages(x uint64) (n int) {
 func sozImages(x uint64) (n int) {
 	return sovImages(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (this *ImportImageRequest) String() string {
+func (this *ImportImageByContentRequest) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&ImportImageRequest{`,
+	s := strings.Join([]string{`&ImportImageByContentRequest{`,
+		`Content:` + fmt.Sprintf("%v", this.Content) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ImportImageByContentResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ImportImageByContentResponse{`,
+		`Image:` + strings.Replace(strings.Replace(this.Image.String(), "Image", "Image", 1), `&`, ``, 1) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ImportImageByPathRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ImportImageByPathRequest{`,
 		`Path:` + fmt.Sprintf("%v", this.Path) + `,`,
 		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-func (this *ImportImageResponse) String() string {
+func (this *ImportImageByPathResponse) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&ImportImageResponse{`,
+	s := strings.Join([]string{`&ImportImageByPathResponse{`,
 		`Image:` + strings.Replace(strings.Replace(this.Image.String(), "Image", "Image", 1), `&`, ``, 1) + `,`,
 		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
 		`}`,
@@ -1771,7 +2050,7 @@ func valueToStringImages(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-func (m *ImportImageRequest) Unmarshal(dAtA []byte) error {
+func (m *ImportImageByContentRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1794,10 +2073,179 @@ func (m *ImportImageRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ImportImageRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ImportImageByContentRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ImportImageRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ImportImageByContentRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Content", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowImages
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthImages
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthImages
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Content = append(m.Content[:0], dAtA[iNdEx:postIndex]...)
+			if m.Content == nil {
+				m.Content = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipImages(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthImages
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ImportImageByContentResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowImages
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ImportImageByContentResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ImportImageByContentResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Image", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowImages
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthImages
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthImages
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Image.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipImages(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthImages
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ImportImageByPathRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowImages
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ImportImageByPathRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ImportImageByPathRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1854,7 +2302,7 @@ func (m *ImportImageRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ImportImageResponse) Unmarshal(dAtA []byte) error {
+func (m *ImportImageByPathResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1877,10 +2325,10 @@ func (m *ImportImageResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ImportImageResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ImportImageByPathResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ImportImageResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ImportImageByPathResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

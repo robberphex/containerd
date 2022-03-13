@@ -2086,7 +2086,31 @@ file {
   dependency: "google/protobuf/timestamp.proto"
   dependency: "github.com/containerd/containerd/api/types/descriptor.proto"
   message_type {
-    name: "ImportImageRequest"
+    name: "ImportImageByContentRequest"
+    field {
+      name: "content"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_BYTES
+      json_name: "content"
+    }
+  }
+  message_type {
+    name: "ImportImageByContentResponse"
+    field {
+      name: "image"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_MESSAGE
+      type_name: ".containerd.services.images.v1.Image"
+      options {
+        65001: 0
+      }
+      json_name: "image"
+    }
+  }
+  message_type {
+    name: "ImportImageByPathRequest"
     field {
       name: "path"
       number: 1
@@ -2096,7 +2120,7 @@ file {
     }
   }
   message_type {
-    name: "ImportImageResponse"
+    name: "ImportImageByPathResponse"
     field {
       name: "image"
       number: 1
@@ -2336,9 +2360,15 @@ file {
       output_type: ".google.protobuf.Empty"
     }
     method {
-      name: "Import"
-      input_type: ".containerd.services.images.v1.ImportImageRequest"
-      output_type: ".containerd.services.images.v1.ImportImageResponse"
+      name: "ImportByPath"
+      input_type: ".containerd.services.images.v1.ImportImageByPathRequest"
+      output_type: ".containerd.services.images.v1.ImportImageByPathResponse"
+    }
+    method {
+      name: "ImportByContent"
+      input_type: ".containerd.services.images.v1.ImportImageByContentRequest"
+      output_type: ".containerd.services.images.v1.ImportImageByContentResponse"
+      client_streaming: true
     }
   }
   options {

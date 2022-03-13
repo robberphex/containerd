@@ -58,7 +58,7 @@ service Images {
 
 	rpc ImportByPath(ImportImageByPathRequest) returns (ImportImageByPathResponse);
 
-	rpc ImportByContent(stream ImportImageByContentRequest) returns (ImportImageByContentResponse);
+	rpc ImportByContent(ImportImageByContentRequest) returns (ImportImageByContentResponse);
 }
 
 message ImportImageByContentRequest {
